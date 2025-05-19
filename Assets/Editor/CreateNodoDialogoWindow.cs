@@ -6,6 +6,8 @@ public class CreateNodoDialogoWindow : EditorWindow
     private string assetName = "NuevoAsset";
     private Sprite selectedSprite;
     private List<string> stringArray = new List<string>();
+    private AudioClip soundClip1;
+    private AudioClip soundClip2;
 
     [MenuItem("Tools/NodeDialoge creator")]
     public static void ShowWindow()
@@ -46,22 +48,27 @@ public class CreateNodoDialogoWindow : EditorWindow
             GUILayout.Label(new GUIContent(selectedSprite.texture), GUILayout.Width(100), GUILayout.Height(100));
         }
 
+        soundClip1 = (AudioClip)EditorGUILayout.ObjectField("Type AudioClip", soundClip1, typeof(AudioClip), false);
+        soundClip2 = (AudioClip)EditorGUILayout.ObjectField("Type AudioClip", soundClip2, typeof(AudioClip), false);
+
         GUILayout.Space(10);
         GUILayout.Label("Crear un nuevo ScriptableObject", EditorStyles.boldLabel);
 
 
         if (GUILayout.Button("Crear Nuevo Asset"))
         {
-            CreateNewAsset(assetName, selectedSprite, stringArray.ToArray());
+            CreateNewAsset(assetName, selectedSprite, stringArray.ToArray(), soundClip1,soundClip2);
         }
 
     }
 
-    void CreateNewAsset(string name, Sprite s, string[] l)
+    void CreateNewAsset(string name, Sprite s, string[] l, AudioClip audio1, AudioClip audio2)
     {
         NodoDialogo newAsset = ScriptableObject.CreateInstance<NodoDialogo>();
         newAsset.lineas = l;
         newAsset.portrait = s;
+        newAsset.sonido1 = audio1;
+        newAsset.sonido2 = audio2;
         string path = "Assets/DialogSistem/Nodos/" + name + ".asset"; // Ruta donde se guardará
 
         AssetDatabase.CreateAsset(newAsset, path);

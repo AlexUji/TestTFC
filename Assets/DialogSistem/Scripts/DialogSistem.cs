@@ -11,7 +11,8 @@ public class DialogSistem : MonoBehaviour
 
     private Sprite imgPortrait;
     private string[] lineas;
-  
+   
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -38,7 +39,14 @@ public class DialogSistem : MonoBehaviour
             foreach(char c in line)
             {
                 texto.text += c;
-                //Añadir sonido
+
+                if (UnityEngine.Random.Range(0, 2) == 0)
+                    transform.GetChild(2).GetComponent<AudioSource>().resource = ndoActual.sonido1;
+                else
+                    transform.GetChild(2).GetComponent<AudioSource>().resource = ndoActual.sonido2;
+
+                transform.GetChild(2).GetComponent<AudioSource>().pitch = 0.5f;
+                transform.GetChild(2).GetComponent<AudioSource>().Play();
                 yield return new WaitForSeconds(velocidadTexto);
             }
               

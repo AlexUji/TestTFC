@@ -7,6 +7,8 @@ public class NodoDialogo : ScriptableObject
     public string[] lineas;
     public NodoDialogo nextDialog;
     public Sprite portrait;
+    public AudioClip sonido1;
+    public AudioClip sonido2;
 
     public NodoDialogo(string[] l, NodoDialogo next, Sprite por)
     {
