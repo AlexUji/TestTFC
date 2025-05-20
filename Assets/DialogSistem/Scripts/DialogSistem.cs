@@ -11,6 +11,7 @@ public class DialogSistem : MonoBehaviour
 
     private Sprite imgPortrait;
     private string[] lineas;
+    private bool stopTyping = false;
    
 
 
@@ -23,47 +24,52 @@ public class DialogSistem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space))
+            stopTyping = true;
+
     }
 
     IEnumerator WriteLine()
     {
-        transform.GetChild(0).GetComponent<Image>().sprite = ndoActual.portrait;
-        TextMeshProUGUI texto = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-
-        lineas = ndoActual.lineas;
-
-        foreach (string line in lineas)
+        if(ndoActual != null)
         {
-            texto.text = string.Empty;
-            foreach(char c in line)
+            transform.GetChild(0).GetComponent<Image>().sprite = ndoActual.portrait;
+            TextMeshProUGUI texto = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+
+            lineas = ndoActual.lineas;
+
+            foreach (string line in lineas)
             {
-                texto.text += c;
+                transform.GetChild(3).gameObject.SetActive(false);
+                texto.text = string.Empty;
+                foreach (char c in line)
+                {
+                    texto.text += c;
 
-                if (UnityEngine.Random.Range(0, 2) == 0)
-                    transform.GetChild(2).GetComponent<AudioSource>().resource = ndoActual.sonido1;
-                else
-                    transform.GetChild(2).GetComponent<AudioSource>().resource = ndoActual.sonido2;
+                    if (UnityEngine.Random.Range(0, 2) == 0)
+                        transform.GetChild(2).GetComponent<AudioSource>().resource = ndoActual.sonido1;
+                    else
+                        transform.GetChild(2).GetComponent<AudioSource>().resource = ndoActual.sonido2;
 
-                transform.GetChild(2).GetComponent<AudioSource>().pitch = 0.5f;
-                transform.GetChild(2).GetComponent<AudioSource>().Play();
-                yield return new WaitForSeconds(velocidadTexto);
+                    transform.GetChild(2).GetComponent<AudioSource>().pitch = 0.5f;
+                    transform.GetChild(2).GetComponent<AudioSource>().Play();
+                    if (!stopTyping)
+                        yield return new WaitForSeconds(velocidadTexto);
+                }
+                stopTyping = false;
+                transform.GetChild(3).gameObject.SetActive(true);
+                yield return new WaitUntil(() => Input.anyKeyDown);
+
             }
-              
-            yield return new WaitUntil(() => Input.anyKeyDown);
-        }
-        if(ndoActual.nextDialog == null)
-        {
-            gameObject.SetActive(false);
-            StopCoroutine("WriteLine");
-        }
-            
 
-        else
-        {
             ndoActual = ndoActual.nextDialog;
             StartCoroutine("WriteLine");
         }
-
+        else if (Input.anyKeyDown)
+        {
+            transform.GetChild(3).gameObject.SetActive(false);
+            gameObject.SetActive(false);
+            StopCoroutine("WriteLine");
+        }
     }
 }
