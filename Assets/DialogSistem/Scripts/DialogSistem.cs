@@ -9,23 +9,19 @@ public class DialogSistem : MonoBehaviour
     public NodoDialogo ndoActual;
     public float velocidadTexto;
 
-    private Sprite imgPortrait;
     private string[] lineas;
-    private bool stopTyping = false;
+    private float currentVelocidadTexto;
    
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         StartCoroutine("WriteLine");
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
-            stopTyping = true;
+            currentVelocidadTexto = velocidadTexto * 0.2f;
 
     }
 
@@ -53,10 +49,9 @@ public class DialogSistem : MonoBehaviour
 
                     transform.GetChild(2).GetComponent<AudioSource>().pitch = 0.5f;
                     transform.GetChild(2).GetComponent<AudioSource>().Play();
-                    if (!stopTyping)
-                        yield return new WaitForSeconds(velocidadTexto);
+                    yield return new WaitForSeconds(currentVelocidadTexto);
                 }
-                stopTyping = false;
+                currentVelocidadTexto = velocidadTexto;
                 transform.GetChild(3).gameObject.SetActive(true);
                 yield return new WaitUntil(() => Input.anyKeyDown);
 
