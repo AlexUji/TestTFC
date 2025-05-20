@@ -31,7 +31,7 @@ public class MapManager : MonoBehaviour
 
         BoundsInt bounds = tileMap.cellBounds;
 
-        for (int z = bounds.max.z; z > bounds.min.z; z--)
+        for (int z = bounds.max.z; z >= bounds.min.z; z--)
         {
             Debug.Log("z");
             for (int y = bounds.min.y; y < bounds.max.y; y++)
