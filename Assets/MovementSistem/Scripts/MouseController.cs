@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static ArrowTranslator;
 
 public class MouseController : MonoBehaviour
 {
@@ -14,12 +15,18 @@ public class MouseController : MonoBehaviour
     private RangeFinder rangeFinder;
     private List<OverlayTile> path = new List<OverlayTile>();
     private List<OverlayTile> inRangeTiles = new List<OverlayTile>();
+    private ArrowTranslator arrowtranslator;
+
+    bool isMoving = false;
 
     private void Start()
     {
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
+        arrowtranslator = new ArrowTranslator();
     }
+
+
 
     // Update is called once per frame
     void Update()
@@ -31,6 +38,25 @@ public class MouseController : MonoBehaviour
             GameObject overlayTile = focusedTileHit.Value.collider.gameObject;
             transform.position = overlayTile.transform.position;
             gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder;
+
+            if(inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()) && !isMoving)
+            {
+                path = pathFinder.FindPath(character.activeTile, overlayTile.GetComponent<OverlayTile>(), inRangeTiles);
+
+                foreach (var tile in inRangeTiles)
+                {
+                    tile.SetArrowSprite(ArrowDiewctions.None);
+                }
+
+                for (int i = 0; i < path.Count; i++)
+                {
+                    var previousTile = i > 0 ? path[i - 1] : character.activeTile;
+                    var futureTile = i < path.Count - 1 ? path[i + 1] : null;
+
+                    var arrowDirection = arrowtranslator.TranslateDirections(previousTile, path[i], futureTile);
+                    path[i].SetArrowSprite(arrowDirection);
+                }
+            }
 
            if (Input.GetMouseButtonDown(0))
             {
@@ -47,14 +73,15 @@ public class MouseController : MonoBehaviour
                 }
                 else
                 {
-                    path = pathFinder.FindPath(character.activeTile, overlayTile.GetComponent<OverlayTile>(), inRangeTiles);
+                    isMoving = true;
                 }
             }
 
         }
-        if(path.Count > 0)
+        if(path.Count > 0 && isMoving)
         {
             MoveCharacterAlongPath();
+            
         }
     }
 
@@ -90,6 +117,7 @@ public class MouseController : MonoBehaviour
         if(path.Count == 0)
         {
             GetInRangeTiles();
+            isMoving = false;
         }
 
     }
