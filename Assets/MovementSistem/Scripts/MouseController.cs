@@ -11,11 +11,14 @@ public class MouseController : MonoBehaviour
     public CharacterInfo character;
 
     private PathFinder pathFinder;
+    private RangeFinder rangeFinder;
     private List<OverlayTile> path = new List<OverlayTile>();
+    private List<OverlayTile> inRangeTiles = new List<OverlayTile>();
 
     private void Start()
     {
         pathFinder = new PathFinder();
+        rangeFinder = new RangeFinder();
     }
 
     // Update is called once per frame
@@ -31,18 +34,20 @@ public class MouseController : MonoBehaviour
 
            if (Input.GetMouseButtonDown(0))
             {
-                Debug.Log("Pulsado");
-               overlayTile.GetComponent<OverlayTile>().ShowTile();
+                //Debug.Log("Pulsado");
+               //overlayTile.GetComponent<OverlayTile>().ShowTile();
 
                 if(character == null)
                 {
                     character = Instantiate(chPre).GetComponent<CharacterInfo>();
                     PositionOnTile(overlayTile.GetComponent<OverlayTile>());
 
+                    GetInRangeTiles();
+
                 }
                 else
                 {
-                    path = pathFinder.FindPath(character.activeTile, overlayTile.GetComponent<OverlayTile>());
+                    path = pathFinder.FindPath(character.activeTile, overlayTile.GetComponent<OverlayTile>(), inRangeTiles);
                 }
             }
 
@@ -50,6 +55,21 @@ public class MouseController : MonoBehaviour
         if(path.Count > 0)
         {
             MoveCharacterAlongPath();
+        }
+    }
+
+    private void GetInRangeTiles()
+    {
+        foreach (var tile in inRangeTiles)
+        {
+            tile.HideTile();
+        }
+
+        inRangeTiles = rangeFinder.GetTilesInRange(character.activeTile, 3);
+
+        foreach (var tile in inRangeTiles)
+        {
+            tile.ShowTile();
         }
     }
 
@@ -65,6 +85,11 @@ public class MouseController : MonoBehaviour
         {
             PositionOnTile(path[0]);
             path.RemoveAt(0); 
+        }
+
+        if(path.Count == 0)
+        {
+            GetInRangeTiles();
         }
 
     }

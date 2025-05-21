@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PathFinder 
 {
-    public List<OverlayTile> FindPath(OverlayTile starNode, OverlayTile endNode)
+    public List<OverlayTile> FindPath(OverlayTile starNode, OverlayTile endNode, List<OverlayTile> tilesInRange)
     {
         List<OverlayTile> openList = new List<OverlayTile>();
         List<OverlayTile> closeList = new List<OverlayTile>();
@@ -25,11 +25,11 @@ public class PathFinder
                 return GetFinalPath(starNode, endNode);
             }
 
-            var neighbourNodes = GetNeighboursNodes(currentNode);
+            var neighbourNodes = MapManager.Instance.GetNeighboursNodes(currentNode, tilesInRange);
 
             foreach (var neighbourNode in neighbourNodes)
             {
-                if(neighbourNode.isBlocked || closeList.Contains(neighbourNode) || Math.Abs(currentNode.gridPosition.z - neighbourNode.gridPosition.z) > 1)
+                if(neighbourNode.isBlocked || closeList.Contains(neighbourNode))
                 {
                     continue;
                 }
@@ -71,44 +71,4 @@ public class PathFinder
         return Math.Abs(starNode.gridPosition.x - neighbourNode.gridPosition.x) + Math.Abs(starNode.gridPosition.y - neighbourNode.gridPosition.y);
     }
 
-    private List<OverlayTile> GetNeighboursNodes(OverlayTile currentNode)
-    {
-        var map = MapManager.Instance.map;
-
-        List<OverlayTile> neighbours = new List<OverlayTile>();
-
-        //Vecino Arriba
-        Vector2Int locationToCheck = new Vector2Int(currentNode.gridPosition.x, currentNode.gridPosition.y + 1);
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            neighbours.Add(map[locationToCheck]);
-        }
-
-        //Vecino Abajo
-        locationToCheck = new Vector2Int(currentNode.gridPosition.x, currentNode.gridPosition.y - 1);
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            neighbours.Add(map[locationToCheck]);
-        }
-
-        //Vecino Derecha
-        locationToCheck = new Vector2Int(currentNode.gridPosition.x + 1, currentNode.gridPosition.y);
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            neighbours.Add(map[locationToCheck]);
-        }
-
-        //Vecino Izquiera
-        locationToCheck = new Vector2Int(currentNode.gridPosition.x - 1, currentNode.gridPosition.y);
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            neighbours.Add(map[locationToCheck]);
-        }
-
-        return neighbours;
-    }
 }

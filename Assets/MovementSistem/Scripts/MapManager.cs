@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -60,5 +61,61 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    public List<OverlayTile> GetNeighboursNodes(OverlayTile currentNode, List<OverlayTile> tilesInRange)
+    {
+        Dictionary<Vector2Int, OverlayTile> tilesToSearch = new Dictionary<Vector2Int, OverlayTile>();
+
+        if(tilesInRange.Count > 0)
+        {
+            foreach (var tile in tilesInRange)
+            {
+                tilesToSearch.Add(tile.grid2DPosition, tile);
+            }
+        }
+        else
+        {
+            tilesToSearch = map;
+        }
+
+        List<OverlayTile> neighbours = new List<OverlayTile>();
+
+        //Vecino Arriba
+        Vector2Int locationToCheck = new Vector2Int(currentNode.gridPosition.x, currentNode.gridPosition.y + 1);
+
+        if (tilesToSearch.ContainsKey(locationToCheck))
+        {
+            if(Math.Abs(currentNode.gridPosition.z - tilesToSearch[locationToCheck].gridPosition.z) <= 1)
+                neighbours.Add(tilesToSearch[locationToCheck]);
+        }
+
+        //Vecino Abajo
+        locationToCheck = new Vector2Int(currentNode.gridPosition.x, currentNode.gridPosition.y - 1);
+
+        if (tilesToSearch.ContainsKey(locationToCheck))
+        {
+            if (Math.Abs(currentNode.gridPosition.z - tilesToSearch[locationToCheck].gridPosition.z) <= 1)
+                neighbours.Add(tilesToSearch[locationToCheck]);
+        }
+
+        //Vecino Derecha
+        locationToCheck = new Vector2Int(currentNode.gridPosition.x + 1, currentNode.gridPosition.y);
+
+        if (tilesToSearch.ContainsKey(locationToCheck))
+        {
+            if (Math.Abs(currentNode.gridPosition.z - tilesToSearch[locationToCheck].gridPosition.z) <= 1)
+                neighbours.Add(tilesToSearch[locationToCheck]);
+        }
+
+        //Vecino Izquiera
+        locationToCheck = new Vector2Int(currentNode.gridPosition.x - 1, currentNode.gridPosition.y);
+
+        if (tilesToSearch.ContainsKey(locationToCheck))
+        {
+            if (Math.Abs(currentNode.gridPosition.z - tilesToSearch[locationToCheck].gridPosition.z) <= 1)
+                neighbours.Add(tilesToSearch[locationToCheck]);
+        }
+
+        return neighbours;
+    }
 
 }
