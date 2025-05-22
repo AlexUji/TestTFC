@@ -3,10 +3,12 @@ using UnityEngine;
 
 public class CharacterInfo : MonoBehaviour
 {
+
     public OverlayTile activeTile;
     public Sprite portrait;
     public bool haveMoved = false;
     public bool haveAttacked = false;
+    public bool isFocused = false;
     public string characterName;
     public int MaxHP;
     public int MaxMP;
@@ -14,5 +16,7 @@ public class CharacterInfo : MonoBehaviour
     public int currentMP;
     public int movementRange;
     public int atackRange;
-    public List<Habilitiy> habilities; 
+    public List<Habilitiy> habilities;
+    public GameObject menu;
+    public List<Sprite> menuSprites;
 }

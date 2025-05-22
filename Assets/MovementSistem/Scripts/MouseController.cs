@@ -62,11 +62,9 @@ public class MouseController : MonoBehaviour
                 }
             }
 
+            //Clic en casilla
            if (Input.GetMouseButtonDown(0))
             {
-                //Debug.Log("Pulsado");
-               //overlayTile.GetComponent<OverlayTile>().ShowTile();
-
                 if(character == null)
                 {
                     character = Instantiate(chPre).GetComponent<CharacterInfo>();
@@ -79,12 +77,20 @@ public class MouseController : MonoBehaviour
                 }
                 else
                 {
-                    if (!character.haveMoved)
+                    if (!character.isFocused)
                     {
+                        character.isFocused = true;
+                        character.menu.SetActive(true);
 
-                        isMoving = true;
-                        currentCharacterInfoUI.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
+                        if (!character.haveMoved)
+                        {
+
+                            isMoving = true;
+                            currentCharacterInfoUI.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
+
+                        }
                     }
+                    
                     
                 }
             }
@@ -130,6 +136,7 @@ public class MouseController : MonoBehaviour
         {
             GetInRangeTiles();
             isMoving = false;
+            character.isFocused = false;
         }
         character.haveMoved = true;
     }
