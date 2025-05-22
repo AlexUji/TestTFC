@@ -154,3 +154,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeTile: {fileID: 0}
+  portrait: {fileID: 7625575254771426721, guid: a2f48330621149245a8dc32062d303ea, type: 3}
+  characterName: Brant
+  MaxHP: 350
+  MaxMP: 10
+  currentHP: 250
+  currentMP: 5
+  movementRange: 3
+  atackRange: 1
+  habilities: []

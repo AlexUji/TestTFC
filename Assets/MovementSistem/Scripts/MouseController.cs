@@ -16,6 +16,7 @@ public class MouseController : MonoBehaviour
     private List<OverlayTile> path = new List<OverlayTile>();
     private List<OverlayTile> inRangeTiles = new List<OverlayTile>();
     private ArrowTranslator arrowtranslator;
+    public GameObject currentCharacterInfoUI;
 
     bool isMoving = false;
 
@@ -24,6 +25,9 @@ public class MouseController : MonoBehaviour
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
         arrowtranslator = new ArrowTranslator();
+        currentCharacterInfoUI = GameObject.Find("UIInfoCharacterTargeted");
+        currentCharacterInfoUI.SetActive(false);
+
     }
 
 
@@ -67,13 +71,21 @@ public class MouseController : MonoBehaviour
                 {
                     character = Instantiate(chPre).GetComponent<CharacterInfo>();
                     PositionOnTile(overlayTile.GetComponent<OverlayTile>());
+                    currentCharacterInfoUI.SetActive(true);
+                    currentCharacterInfoUI.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
 
                     GetInRangeTiles();
 
                 }
                 else
                 {
-                    isMoving = true;
+                    if (!character.haveMoved)
+                    {
+
+                        isMoving = true;
+                        currentCharacterInfoUI.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
+                    }
+                    
                 }
             }
 
@@ -92,7 +104,7 @@ public class MouseController : MonoBehaviour
             tile.HideTile();
         }
 
-        inRangeTiles = rangeFinder.GetTilesInRange(character.activeTile, 3);
+        inRangeTiles = rangeFinder.GetTilesInRange(character.activeTile, character.movementRange);
 
         foreach (var tile in inRangeTiles)
         {
@@ -119,7 +131,7 @@ public class MouseController : MonoBehaviour
             GetInRangeTiles();
             isMoving = false;
         }
-
+        character.haveMoved = true;
     }
 
     public RaycastHit2D? GetFocusOnTile()
