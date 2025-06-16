@@ -10,6 +10,7 @@ public class MapManager : MonoBehaviour
 
     public OverlayTile overlayTilePrefab;
     public GameObject overlayContainer;
+    public SpawnSystem spawnSystem;
 
     public Dictionary<Vector2Int, OverlayTile> map;
 
@@ -34,13 +35,10 @@ public class MapManager : MonoBehaviour
 
         for (int z = bounds.max.z; z >= bounds.min.z; z--)
         {
-            Debug.Log("z");
             for (int y = bounds.min.y; y < bounds.max.y; y++)
             {
-                Debug.Log("y");
                 for (int x = bounds.min.x; x < bounds.max.x; x++)
                 {
-                    Debug.Log("x");
                     var tileLocation = new Vector3Int(x, y, z);
 
                     var tileKey = new Vector2Int(x, y);
@@ -53,12 +51,17 @@ public class MapManager : MonoBehaviour
 
                         overlayTile.transform.position = new Vector3(cWorldPos.x, cWorldPos.y, cWorldPos.z + 1);
                         overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
+                        overlayTile.GetComponent<SpriteRenderer>().enabled = false;
+                        
                         overlayTile.gridPosition = tileLocation;
                         map.Add(tileKey, overlayTile);
                     }
                 }
             }
         }
+
+        spawnSystem.SpawnAllies(map);
+
     }
 
     public List<OverlayTile> GetNeighboursNodes(OverlayTile currentNode, List<OverlayTile> tilesInRange)

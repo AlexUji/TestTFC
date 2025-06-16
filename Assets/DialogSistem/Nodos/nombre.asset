@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9007007574cd49544ae2143695c96e9c, type: 3}
-  m_Name: Prueba 2
+  m_Name: nombre
   m_EditorClassIdentifier: 
   lineas:
-  - Gracias por preguntar, nos vemos
-  nextDialog: {fileID: 11400000, guid: 13cca9e0fa7658a469872089652efcaa, type: 2}
-  portrait: {fileID: 7625575254771426721, guid: a2f48330621149245a8dc32062d303ea, type: 3}
-  sonido1: {fileID: 0}
-  sonido2: {fileID: 0}
+  - sdfdsf
+  - xfggh
+  nextDialog: {fileID: 0}
+  portrait: {fileID: -52022991631478978, guid: 479c262caaa90164abcae5ac2473a57e, type: 3}
+  sonido1: {fileID: 8300000, guid: d4143628bdc66284d84728cddd75ec76, type: 3}
+  sonido2: {fileID: 8300000, guid: af98ca2cf82f5144ba3006c9b7c8deaf, type: 3}

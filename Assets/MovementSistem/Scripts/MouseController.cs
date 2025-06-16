@@ -14,11 +14,14 @@ public class MouseController : MonoBehaviour
     private PathFinder pathFinder;
     private RangeFinder rangeFinder;
     private List<OverlayTile> path = new List<OverlayTile>();
-    private List<OverlayTile> inRangeTiles = new List<OverlayTile>();
+    public List<OverlayTile> inRangeTiles = new List<OverlayTile>();
     private ArrowTranslator arrowtranslator;
     public GameObject currentCharacterInfoUI;
+    public GameObject overlayTile;
 
-    bool isMoving = false;
+    public bool isMoving = false;
+    public bool isFreeFocus = true;
+    public bool moveAction = false;
 
     private void Start()
     {
@@ -37,13 +40,13 @@ public class MouseController : MonoBehaviour
     {
         var focusedTileHit = GetFocusOnTile();
 
-        if (focusedTileHit.HasValue)
+        if (focusedTileHit.HasValue && isFreeFocus)
         {
-            GameObject overlayTile = focusedTileHit.Value.collider.gameObject;
+            overlayTile = focusedTileHit.Value.collider.gameObject;
             transform.position = overlayTile.transform.position;
-            gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder;
+            gameObject.GetComponent<SpriteRenderer>().sortingOrder = 100;
 
-            if(inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()) && !isMoving)
+            if(!isMoving && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()))
             {
                 path = pathFinder.FindPath(character.activeTile, overlayTile.GetComponent<OverlayTile>(), inRangeTiles);
 
@@ -65,81 +68,46 @@ public class MouseController : MonoBehaviour
             //Clic en casilla
            if (Input.GetMouseButtonDown(0))
             {
-                if(character == null)
+                //Si no hay character focus
+                if(overlayTile.GetComponent<OverlayTile>().characterInTile != null)
                 {
-                    character = Instantiate(chPre).GetComponent<CharacterInfo>();
-                    PositionOnTile(overlayTile.GetComponent<OverlayTile>());
+                    isFreeFocus = false;
+                    character = overlayTile.GetComponent<OverlayTile>().characterInTile;
+                    character.isFocused = true;
+                    character.menu.SetActive(true);
                     currentCharacterInfoUI.SetActive(true);
                     currentCharacterInfoUI.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
 
-                    GetInRangeTiles();
-
                 }
-                else
+                //Si hay character focus y se ha clicado a mover
+                else if (moveAction)
                 {
-                    if (!character.isFocused)
+                    foreach (var tile in inRangeTiles)
                     {
-                        character.isFocused = true;
-                        character.menu.SetActive(true);
-
-                        if (!character.haveMoved)
-                        {
-
-                            isMoving = true;
-                            currentCharacterInfoUI.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
-
-                        }
+                        tile.SetArrowSprite(ArrowDiewctions.None);
+                        tile.HideTile();
                     }
-                    
-                    
+
+                    isMoving = true;
+                    character.menu.SetActive(false);
+                   
                 }
+
+            }
+
+
+           //Para recorrer todo el path
+            if (path.Count > 0 && isMoving)
+            {
+                MoveCharacterAlongPath();
+
             }
 
         }
-        if(path.Count > 0 && isMoving)
-        {
-            MoveCharacterAlongPath();
-            
-        }
+        
     }
 
-    private void GetInRangeTiles()
-    {
-        foreach (var tile in inRangeTiles)
-        {
-            tile.HideTile();
-        }
 
-        inRangeTiles = rangeFinder.GetTilesInRange(character.activeTile, character.movementRange);
-
-        foreach (var tile in inRangeTiles)
-        {
-            tile.ShowTile();
-        }
-    }
-
-    private void MoveCharacterAlongPath()
-    {
-        var steep = speed * Time.deltaTime;
-
-        var zIndex = path[0].transform.position.z;
-        character.transform.position = Vector2.MoveTowards(character.transform.position, path[0].transform.position, steep);
-        character.transform.position = new Vector3(character.transform.position.x, character.transform.position.y, zIndex);
-
-        if(Vector2.Distance(character.transform.position, path[0].transform.position) < 0.0001f)
-        {
-            PositionOnTile(path[0]);
-            path.RemoveAt(0); 
-        }
-
-        if(path.Count == 0)
-        {
-            GetInRangeTiles();
-            isMoving = false;
-            character.isFocused = false;
-        }
-        character.haveMoved = true;
-    }
 
     public RaycastHit2D? GetFocusOnTile()
     {
@@ -156,11 +124,41 @@ public class MouseController : MonoBehaviour
         return null;
     }
 
-    private void PositionOnTile(OverlayTile tile)
+    public void PositionOnTile(OverlayTile tile)
     {
         Debug.Log("Pos x: "+tile.transform.position.x + ", Pos y: " + tile.transform.position.y + ", Pos z: " + tile.transform.position.z);
         character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, tile.transform.position.z);
         //character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
         character.activeTile = tile;
+    }
+    private void MoveCharacterAlongPath()
+    {
+        var steep = speed * Time.deltaTime;
+
+        var zIndex = path[0].transform.position.z;
+        character.transform.position = Vector2.MoveTowards(character.transform.position, path[0].transform.position, steep);
+        character.transform.position = new Vector3(character.transform.position.x, character.transform.position.y, zIndex);
+
+        if (Vector2.Distance(character.transform.position, path[0].transform.position) < 0.0001f)
+        {
+            PositionOnTile(path[0]);
+            path.RemoveAt(0);
+        }
+
+        if (path.Count == 0)
+        {
+
+            inRangeTiles = new List<OverlayTile>();
+            isMoving = false;
+            character.haveMoved = true;
+            isFreeFocus = true;
+            moveAction = false;
+            character.menu.SetActive(true);
+            //character.isFocused = false;
+            //character.GetComponent<SpriteRenderer>().color = new Color(0.75f, 0.75f, 0.75f, 1);
+
+        }
+
+
     }
 }

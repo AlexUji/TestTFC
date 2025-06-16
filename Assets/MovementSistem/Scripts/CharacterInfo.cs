@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CharacterInfo : MonoBehaviour
 {
-
+    public Vector3Int SpawnPosition = Vector3Int.zero;
     public OverlayTile activeTile;
     public Sprite portrait;
     public bool haveMoved = false;

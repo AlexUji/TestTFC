@@ -16,7 +16,7 @@ public class OverlayTile : MonoBehaviour
     public Vector2Int grid2DPosition { get {return new Vector2Int(gridPosition.x, gridPosition.y); } }
 
     public List<Sprite> arrows;
-
+    public CharacterInfo characterInTile;
 
     private void Update()
     {
@@ -28,11 +28,13 @@ public class OverlayTile : MonoBehaviour
     }
     public void ShowTile()
     {
+        gameObject.GetComponent<SpriteRenderer>().enabled = true;
         gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
     }
 
     public void HideTile()
     {
+        gameObject.GetComponent<SpriteRenderer>().enabled = false;
         gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
         SetArrowSprite(ArrowDiewctions.None);
     }
@@ -42,11 +44,12 @@ public class OverlayTile : MonoBehaviour
         var arrow = GetComponentsInChildren<SpriteRenderer>()[1];
         if(direction == ArrowDiewctions.None)
         {
-            arrow.color = new Color(1, 1, 1, 0);
+            arrow.GetComponent<SpriteRenderer>().enabled = false;
+            //arrow.color = new Color(1, 1, 1, 0);
         }
         else
         {
-
+            arrow.GetComponent<SpriteRenderer>().enabled = true;
             arrow.color = new Color(1, 1, 1, 1);
             arrow.sprite = arrows[(int)direction];
             //arrow.sortingOrder = GetComponent<SpriteRenderer>().sortingOrder;
