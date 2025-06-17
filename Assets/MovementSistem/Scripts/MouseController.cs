@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using static ArrowTranslator;
 
 public class MouseController : MonoBehaviour
@@ -72,6 +73,7 @@ public class MouseController : MonoBehaviour
             //Clic en casilla
            if (Input.GetMouseButtonDown(0))
             {
+
                 if (attackAction)
                 {
                     if (inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()) && overlayTile.GetComponent<OverlayTile>().characterInTile != null)
@@ -99,6 +101,8 @@ public class MouseController : MonoBehaviour
                     //Si hay character focus y se ha clicado a mover
                     else if (moveAction && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()))
                     {
+                        character.activeTile.characterInTile = null;
+                        overlayTile.GetComponent<OverlayTile>().characterInTile = character;
                         foreach (var tile in inRangeTiles)
                         {
                             tile.SetArrowSprite(ArrowDiewctions.None);
@@ -107,6 +111,7 @@ public class MouseController : MonoBehaviour
 
                         isMoving = true;
                         character.menu.SetActive(false);
+                        
 
                     }
                 }
@@ -170,6 +175,7 @@ public class MouseController : MonoBehaviour
     }
     private void MoveCharacterAlongPath()
     {
+        
         var steep = speed * Time.deltaTime;
 
         var zIndex = path[0].transform.position.z;
