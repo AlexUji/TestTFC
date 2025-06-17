@@ -445,9 +445,10 @@ MonoBehaviour:
   habilities: []
   menu: {fileID: 2388184614966042728}
   menuSprites: []
+  level: 0
   MaxHP: 350
   MaxMP: 10
-  currentHP: 250
+  currentHP: 1
   currentMP: 5
   movementRange: 3
   atackRange: 1

@@ -11,12 +11,14 @@ public class CharacterInfo : MonoBehaviour
     public bool isFocused = false;
     public string characterName;
     
-    public List<Habilitiy> habilities;
+    public List<Ability> habilities;
     public GameObject menu;
     public List<Sprite> menuSprites;
 
 
     ///STATS///
+    public int level;
+    private int enemyCount;
     public int MaxHP;
     public int MaxMP;
     public int currentHP;
@@ -32,5 +34,23 @@ public class CharacterInfo : MonoBehaviour
     public void basicAttack(CharacterInfo enemy)
     {
         enemy.currentHP -= attack - enemy.defense;
+        if(enemy.currentHP <= 0)
+        {
+            //Animación muerte
+            Destroy(enemy.gameObject);
+        }
+    }
+
+    public void EnemySlayed()
+    {
+        enemyCount++;
+        if (enemyCount >= 3)
+        {
+            //Mostrar graficamente
+            int prelvl = level;
+            level++;
+            Debug.Log("Has pasado de " + prelvl + "ha " + level);
+            enemyCount = 0;
+        }
     }
 }
