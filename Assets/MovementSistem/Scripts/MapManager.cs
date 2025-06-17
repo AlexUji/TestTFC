@@ -61,6 +61,7 @@ public class MapManager : MonoBehaviour
         }
 
         spawnSystem.SpawnAllies(map);
+        spawnSystem.SpawnEnemys(map);
 
     }
 

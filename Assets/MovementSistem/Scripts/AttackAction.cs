@@ -1,10 +1,6 @@
-using System.IO;
 using UnityEngine;
-using static ArrowTranslator;
-using UnityEngine.TextCore.Text;
-using System.Collections.Generic;
 
-public class MoveCharacter : MonoBehaviour
+public class AttackAction : MonoBehaviour
 {
     private RangeFinder rangeFinder;
 
@@ -12,7 +8,7 @@ public class MoveCharacter : MonoBehaviour
     private MouseController mouseController;
     private void Start()
     {
-      
+
         rangeFinder = new RangeFinder();
         character = transform.GetComponentInParent<CharacterInfo>();
         mouseController = GameObject.Find("Cursor").GetComponent<MouseController>();
@@ -28,22 +24,23 @@ public class MoveCharacter : MonoBehaviour
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-            if (hit.collider.name == "move")
+            if (hit.collider.name == "attack")
             //Has clicado en el icono
             {
-               
-                if (!character.haveMoved)
+
+                if (!character.haveAttacked)
                 {
                     GetInRangeTiles();
                     mouseController.isFreeFocus = true;
-                    mouseController.moveAction = true;
+                    mouseController.attackAction = true;
 
                 }
-                else {
-                    Debug.Log("Ya te has movido");
+                else
+                {
+                    Debug.Log("Ya has atacado");
                 }
-               
-              
+
+
             }
 
             ////
@@ -57,11 +54,11 @@ public class MoveCharacter : MonoBehaviour
             tile.HideTile();
         }
 
-        mouseController.inRangeTiles = rangeFinder.GetTilesInRange(character.activeTile, character.movementRange);
+        mouseController.inRangeTiles = rangeFinder.GetTilesInRange(character.activeTile, character.atackRange);
 
         foreach (var tile in mouseController.inRangeTiles)
         {
-            tile.ShowTile("move");
+            tile.ShowTile("attack");
         }
     }
 

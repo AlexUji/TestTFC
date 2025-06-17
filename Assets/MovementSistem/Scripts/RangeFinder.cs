@@ -27,7 +27,7 @@ public class RangeFinder
             tileForPStep = surroundigTiles.Distinct().ToList();
             stepCount++;
         }
-
+        inRangeTiles.Remove(startTile);
         return inRangeTiles.Distinct().ToList();
     }
 }

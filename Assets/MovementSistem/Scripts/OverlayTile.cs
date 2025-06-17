@@ -26,10 +26,15 @@ public class OverlayTile : MonoBehaviour
         }
 
     }
-    public void ShowTile()
+    public void ShowTile(string order)
     {
         gameObject.GetComponent<SpriteRenderer>().enabled = true;
-        gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+        if(order == "attack")
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 1);
+        else if (order == "support")
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 1, 0, 1);
+        else
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
     }
 
     public void HideTile()

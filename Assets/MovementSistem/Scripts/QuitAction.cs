@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using static ArrowTranslator;
 
 public class QuitAction : MonoBehaviour
 {
@@ -23,11 +25,7 @@ public class QuitAction : MonoBehaviour
 
             if (hit.collider.name == "quit")
             {
-                mouseController.isFreeFocus = true;
-                mouseController.character.isFocused = false;
-                mouseController.character.menu.SetActive(false);
-                mouseController.currentCharacterInfoUI.SetActive(false);
-                mouseController.character = null;
+               mouseController.ResetAction();
 
             }
         }
