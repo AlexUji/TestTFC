@@ -147,6 +147,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9dc87221a10bcb4c8919a52373af22f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1528594739602007936
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3630705622860508502}
+  - component: {fileID: 5101035478216661693}
+  m_Layer: 0
+  m_Name: OverloadPunch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3630705622860508502
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528594739602007936}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 854343789496075369}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5101035478216661693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528594739602007936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bca4b766e63716b4cb7f1367072158d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityName: 
+  manaCost: 0
+  abilityRange: 0
+  levelToUnlock: 0
 --- !u!1 &1837141949752202322
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,6 +362,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 974736006838797174}
+  - {fileID: 3630705622860508502}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!212 &6904408873869107405
@@ -442,7 +491,21 @@ MonoBehaviour:
   haveAttacked: 0
   isFocused: 0
   characterName: Brant
-  habilities: []
+  habilities:
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
+  - {fileID: 5101035478216661693}
   menu: {fileID: 2388184614966042728}
   menuSprites: []
   level: 0
@@ -662,6 +725,7 @@ GameObject:
   - component: {fileID: 3100350327953762342}
   - component: {fileID: 5577381019765814262}
   - component: {fileID: 2485102404240893193}
+  - component: {fileID: 6178552300288222248}
   m_Layer: 0
   m_Name: ability
   m_TagString: Untagged
@@ -785,3 +849,16 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &6178552300288222248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4822505860280421992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f235142fe908bd4fb306ba33d5ef662, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityCardPrefab: {fileID: 2520978854599828839, guid: d5f4c55472e0b1643b5bdd2578b9ef7b, type: 3}
