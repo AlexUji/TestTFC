@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9214c1004663e4b448e9e9611d5d1cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityInfoBox: {fileID: 0}
+  textInfo: 
 --- !u!1 &2520978854599828839
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 8548762851865940634}
   - component: {fileID: 9132515799015112342}
   - component: {fileID: 5029283057041212138}
+  - component: {fileID: 166818460448300531}
   m_Layer: 5
   m_Name: Ability
   m_TagString: Untagged
@@ -228,6 +229,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &166818460448300531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2520978854599828839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ebeb687557017f47a6b048d80f3f63d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6794504147462159444
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,7 +360,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1792161955996230031}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 166818460448300531}
+        m_TargetAssemblyTypeName: AbilityMenuAction, Assembly-CSharp
+        m_MethodName: PressButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &9152551588576688771
 GameObject:
   m_ObjectHideFlags: 0

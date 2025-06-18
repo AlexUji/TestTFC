@@ -192,9 +192,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityName: 
-  manaCost: 0
-  abilityRange: 0
-  levelToUnlock: 0
+  abilityInfoText: 
+  manaCost: 5
+  abilityRange: 5
+  levelToUnlock: 1
 --- !u!1 &1837141949752202322
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,7 +509,7 @@ MonoBehaviour:
   - {fileID: 5101035478216661693}
   menu: {fileID: 2388184614966042728}
   menuSprites: []
-  level: 0
+  level: 1
   MaxHP: 350
   MaxMP: 10
   currentHP: 250

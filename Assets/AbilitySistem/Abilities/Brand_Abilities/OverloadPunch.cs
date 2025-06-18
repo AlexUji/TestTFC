@@ -20,11 +20,20 @@ public class OverloadPunch : Ability
 
     public override void ApplyEffect(CharacterInfo selfCharacter, CharacterInfo targetCharacter)
     {
+        Debug.Log("Se ha llamado");
         //Si cumple los requisitos
         if (selfCharacter.level >= levelToUnlock && selfCharacter.currentMP >= manaCost)
         {
+            
             targetCharacter.currentHP -= selfCharacter.attack*3 - math.abs((int)targetCharacter.defense / 2);
+            if(targetCharacter.currentHP <= 0)
+                Destroy(targetCharacter.gameObject);
             base.ApplyEffect(selfCharacter, targetCharacter);
+            Debug.Log("Se ha ejecutado");
+        }
+        else
+        {
+            Debug.Log("No se ha realizado la habilidad");
         }
 
     }

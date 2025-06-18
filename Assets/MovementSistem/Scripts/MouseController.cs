@@ -19,11 +19,14 @@ public class MouseController : MonoBehaviour
     private ArrowTranslator arrowtranslator;
     public GameObject currentCharacterInfoUI;
     public GameObject overlayTile;
+    public Ability selectedAbility;
+
 
     public bool isMoving = false;
     public bool isFreeFocus = true;
     public bool moveAction = false;
     public bool attackAction = false;
+    public bool abilityAction = false;
 
     private void Start()
     {
@@ -44,11 +47,15 @@ public class MouseController : MonoBehaviour
 
         if (focusedTileHit.HasValue && isFreeFocus)
         {
-            overlayTile = focusedTileHit.Value.collider.gameObject;
-            transform.position = overlayTile.transform.position;
-            gameObject.GetComponent<SpriteRenderer>().sortingOrder = 100;
+            if (!isMoving)
+            {
+                overlayTile = focusedTileHit.Value.collider.gameObject;
+                transform.position = overlayTile.transform.position;
+                gameObject.GetComponent<SpriteRenderer>().sortingOrder = 50;
 
-            if(!isMoving && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()))
+            }
+
+            if (!isMoving && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()))
             {
                 path = pathFinder.FindPath(character.activeTile, overlayTile.GetComponent<OverlayTile>(), inRangeTiles);
 
@@ -84,11 +91,28 @@ public class MouseController : MonoBehaviour
                     }
                     else
                         ResetAction();
+                }else if (abilityAction)
+                {
+                    if (inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()) && overlayTile.GetComponent<OverlayTile>().characterInTile != null)
+                    {
+
+                        Debug.Log("Dentro de ejecutar la acción");
+                        selectedAbility.ApplyEffect(character, overlayTile.GetComponent<OverlayTile>().characterInTile);
+
+                        character.haveAttacked = true;
+                        ResetAction();
+                    }
+                    else
+                    {
+                        Debug.Log("No ha salido bien");
+                        ResetAction();
+                    }
+                       
                 }
                 else
                 {
                     //Si no hay character focus
-                    if (overlayTile.GetComponent<OverlayTile>().characterInTile != null)
+                    if (character == null && overlayTile.GetComponent<OverlayTile>().characterInTile != null)
                     {
                         isFreeFocus = false;
                         character = overlayTile.GetComponent<OverlayTile>().characterInTile;
@@ -101,6 +125,10 @@ public class MouseController : MonoBehaviour
                     //Si hay character focus y se ha clicado a mover
                     else if (moveAction && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()))
                     {
+                       
+                        transform.position = overlayTile.transform.position;
+                        gameObject.GetComponent<SpriteRenderer>().sortingOrder = 50;
+
                         character.activeTile.characterInTile = null;
                         overlayTile.GetComponent<OverlayTile>().characterInTile = character;
                         foreach (var tile in inRangeTiles)
@@ -141,6 +169,7 @@ public class MouseController : MonoBehaviour
         isMoving = false;
         moveAction = false;
         attackAction = false;
+        abilityAction = false;
 
         foreach (var tile in inRangeTiles)
         {
@@ -190,13 +219,14 @@ public class MouseController : MonoBehaviour
 
         if (path.Count == 0)
         {
-
+            isFreeFocus = false;
             inRangeTiles = new List<OverlayTile>();
             isMoving = false;
             character.haveMoved = true;
-            isFreeFocus = true;
+            
             moveAction = false;
             character.menu.SetActive(true);
+            
             //character.isFocused = false;
             //character.GetComponent<SpriteRenderer>().color = new Color(0.75f, 0.75f, 0.75f, 1);
 

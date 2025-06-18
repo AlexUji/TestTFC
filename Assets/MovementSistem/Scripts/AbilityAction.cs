@@ -44,6 +44,7 @@ public class AbilityAction : MonoBehaviour
                         abilityCard.transform.GetChild(1).transform.GetComponent<TextMeshProUGUI>().text = ab.abilityName;
                         abilityCard.transform.GetChild(2).transform.GetComponent<TextMeshProUGUI>().text = ab.manaCost + "MP";
                         abilityCard.transform.GetChild(1).GetComponent<AbilityShowInfo>().textInfo = ab.abilityInfoText;
+                        abilityCard.GetComponent<AbilityMenuAction>().ability = ab;
                     }
 
                    if(character.habilities.Count >= 6)
