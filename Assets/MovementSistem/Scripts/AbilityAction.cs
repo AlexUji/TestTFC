@@ -43,6 +43,7 @@ public class AbilityAction : MonoBehaviour
                         GameObject abilityCard = Instantiate(abilityCardPrefab, AbilityMenuInstance.Instance.container.transform);
                         abilityCard.transform.GetChild(1).transform.GetComponent<TextMeshProUGUI>().text = ab.abilityName;
                         abilityCard.transform.GetChild(2).transform.GetComponent<TextMeshProUGUI>().text = ab.manaCost + "MP";
+                        abilityCard.transform.GetChild(1).GetComponent<AbilityShowInfo>().textInfo = ab.abilityInfoText;
                     }
 
                    if(character.habilities.Count >= 6)

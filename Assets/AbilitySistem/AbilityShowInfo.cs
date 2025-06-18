@@ -7,24 +7,23 @@ using UnityEngine.EventSystems;
 public class AbilityShowInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 
-
-    public GameObject abilityInfoBox;
+    public string textInfo;
+    
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-
-        abilityInfoBox.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = transform.GetComponent<TextMeshProUGUI>().text+" Texto de prueba funciona de locos";
-        abilityInfoBox.SetActive(true);
-
-
+        
+        
+        AbilityMenuInstance.Instance.infoBox.SetActive(true);
+        AbilityMenuInstance.Instance.infotext.text = textInfo;
 
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        AbilityMenuInstance.Instance.infotext.text = string.Empty;
+        AbilityMenuInstance.Instance.infoBox.SetActive(false);
 
-        abilityInfoBox.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = string.Empty;
-        abilityInfoBox.SetActive(false);
     }
 
 
