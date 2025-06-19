@@ -16,6 +16,7 @@ public class OverloadPunch : Ability
         manaCost = 2;
         levelToUnlock = 1;
         abilityRange = 1;
+        type = "attack";
     }
 
     public override void ApplyEffect(CharacterInfo selfCharacter, CharacterInfo targetCharacter)
@@ -26,8 +27,8 @@ public class OverloadPunch : Ability
         {
             
             targetCharacter.currentHP -= selfCharacter.attack*3 - math.abs((int)targetCharacter.defense / 2);
-            if(targetCharacter.currentHP <= 0)
-                Destroy(targetCharacter.gameObject);
+            if(targetCharacter.currentHP <= 0) { }
+                selfCharacter.EnemySlayed(targetCharacter);
             base.ApplyEffect(selfCharacter, targetCharacter);
             Debug.Log("Se ha ejecutado");
         }

@@ -37,7 +37,7 @@ public class AbilityMenuAction : MonoBehaviour
 
         foreach (var tile in mouseController.inRangeTiles)
         {
-            tile.ShowTile("attack");
+            tile.ShowTile(ability.type);
         }
     }
 }
