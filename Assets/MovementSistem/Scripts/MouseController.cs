@@ -17,7 +17,7 @@ public class MouseController : MonoBehaviour
     private List<OverlayTile> path = new List<OverlayTile>();
     public List<OverlayTile> inRangeTiles = new List<OverlayTile>();
     private ArrowTranslator arrowtranslator;
-    public GameObject currentCharacterInfoUI;
+    //public GameObject currentCharacterInfoUI;
     public GameObject overlayTile;
     public Ability selectedAbility;
 
@@ -33,8 +33,8 @@ public class MouseController : MonoBehaviour
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
         arrowtranslator = new ArrowTranslator();
-        currentCharacterInfoUI = GameObject.Find("UIInfoCharacterTargeted");
-        currentCharacterInfoUI.SetActive(false);
+        CanvasInstance.Instance.characterInfoBox.SetActive(false);
+
 
     }
 
@@ -118,8 +118,8 @@ public class MouseController : MonoBehaviour
                         character = overlayTile.GetComponent<OverlayTile>().characterInTile;
                         character.isFocused = true;
                         character.menu.SetActive(true);
-                        currentCharacterInfoUI.SetActive(true);
-                        currentCharacterInfoUI.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
+                        CanvasInstance.Instance.characterInfoBox.SetActive(true);
+                        CanvasInstance.Instance.characterInfoBox.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
 
                     }
                     //Si hay character focus y se ha clicado a mover
@@ -161,10 +161,13 @@ public class MouseController : MonoBehaviour
 
     public void ResetAction() {
 
+        AbilityMenuInstance.Instance.gameObject.SetActive(false);
+        CanvasInstance.Instance.btnQuit.SetActive(false);
         isFreeFocus = true;
         character.isFocused = false;
         character.menu.SetActive(false);
-        currentCharacterInfoUI.SetActive(false);
+        CanvasInstance.Instance.characterInfoBox.SetActive(false);
+        CanvasInstance.Instance.characterInfoBox.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
         character = null;
         isMoving = false;
         moveAction = false;

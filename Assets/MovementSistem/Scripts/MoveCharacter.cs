@@ -34,6 +34,7 @@ public class MoveCharacter : MonoBehaviour
                
                 if (!character.haveMoved)
                 {
+                    CanvasInstance.Instance.btnQuit.SetActive(true);
                     GetInRangeTiles();
                     mouseController.isFreeFocus = true;
                     mouseController.moveAction = true;

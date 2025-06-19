@@ -31,4 +31,9 @@ public class QuitAction : MonoBehaviour
         }
 
     }
+
+    public void QuitButton()
+    {
+        mouseController.ResetAction();
+    }
 }

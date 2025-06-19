@@ -8,6 +8,7 @@ public class UICharacterInfoUpdate : MonoBehaviour
    
     public void UpdateUI(CharacterInfo targetedCharacter)
     {
+        
         transform.GetChild(0).GetComponent<Image>().sprite = targetedCharacter.portrait;
         transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = targetedCharacter.characterName;
 

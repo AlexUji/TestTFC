@@ -30,6 +30,8 @@ public class AttackAction : MonoBehaviour
 
                 if (!character.haveAttacked)
                 {
+                    character.menu.SetActive(false);
+                    CanvasInstance.Instance.btnQuit.SetActive(true);
                     GetInRangeTiles();
                     mouseController.isFreeFocus = true;
                     mouseController.attackAction = true;

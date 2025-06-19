@@ -29,9 +29,10 @@ public class AbilityAction : MonoBehaviour
 
                 if (!character.haveAttacked)
                 {
-                    
+
                     //mouseController.isFreeFocus = true;
                     //mouseController.attackAction = true;
+                    CanvasInstance.Instance.btnQuit.SetActive(true);
                     character.menu.SetActive(false);
                     AbilityMenuInstance.Instance.transform.gameObject.SetActive(true);
                     foreach (Transform ab in AbilityMenuInstance.Instance.container.transform)
