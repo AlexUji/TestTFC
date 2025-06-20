@@ -4,17 +4,17 @@ using UnityEngine;
 public class CharacterInfo : MonoBehaviour
 {
     public Vector3Int SpawnPosition = Vector3Int.zero;
-   
+
     public OverlayTile activeTile;
-   
+
     public Sprite portrait;
-    
+
     public Team team = Team.None;
 
     public bool haveMoved = false;
     public bool haveAttacked = false;
     public bool isFocused = false;
-   
+    public bool haveActions {  get { return !haveMoved || !haveAttacked; }}
     public string characterName;
     
     public List<Ability> habilities;

@@ -42,7 +42,7 @@ public class TurnSistem : MonoBehaviour
 
     public void EndAction(CharacterInfo character)
     {
-        if(character.haveAttacked && character.haveMoved)
+        if(!character.haveActions)
         {
             character.transform.GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1);
 
@@ -56,6 +56,9 @@ public class TurnSistem : MonoBehaviour
                     foreach (Transform c in AllyTeam.transform)
                     {
                         c.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1);
+                        c.GetComponent<CharacterInfo>().haveAttacked = false;
+                        c.GetComponent<CharacterInfo>().haveMoved = false;
+
                     }
                     Debug.Log("Turno enemigo");
                     AllyActionsPerTurn = AllyTeam.transform.childCount;
@@ -71,6 +74,8 @@ public class TurnSistem : MonoBehaviour
                     foreach (Transform c in EnemyTeam.transform)
                     {
                         c.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1);
+                        c.GetComponent<CharacterInfo>().haveAttacked = false;
+                        c.GetComponent<CharacterInfo>().haveMoved = false;
                     }
                     Debug.Log("Tu turno");
                     EnemyActionsPerTurn = EnemyTeam.transform.childCount;

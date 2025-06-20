@@ -115,7 +115,7 @@ public class MouseController : MonoBehaviour
                     else
                     {
                         //Si no hay character focus
-                        if (character == null && overlayTile.GetComponent<OverlayTile>().characterInTile != null)
+                        if (character == null && overlayTile.GetComponent<OverlayTile>().characterInTile != null && overlayTile.GetComponent<OverlayTile>().characterInTile.haveActions)
                         {
                             isFreeFocus = false;
                             character = overlayTile.GetComponent<OverlayTile>().characterInTile;
@@ -126,7 +126,7 @@ public class MouseController : MonoBehaviour
 
                         }
                         //Si hay character focus y se ha clicado a mover
-                        else if (moveAction && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()))
+                        else if (moveAction && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()) && overlayTile.GetComponent<OverlayTile>().characterInTile == null)
                         {
 
                             transform.position = overlayTile.transform.position;
