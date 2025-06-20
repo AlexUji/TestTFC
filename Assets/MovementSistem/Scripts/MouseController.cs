@@ -43,118 +43,122 @@ public class MouseController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var focusedTileHit = GetFocusOnTile();
-
-        if (focusedTileHit.HasValue && isFreeFocus)
+        if (TurnSistem.Instance.AllyTurn)
         {
-            if (!isMoving)
+            var focusedTileHit = GetFocusOnTile();
+
+            if (focusedTileHit.HasValue && isFreeFocus)
             {
-                overlayTile = focusedTileHit.Value.collider.gameObject;
-                transform.position = overlayTile.transform.position;
-                gameObject.GetComponent<SpriteRenderer>().sortingOrder = 50;
-
-            }
-
-            if (!isMoving && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()))
-            {
-                path = pathFinder.FindPath(character.activeTile, overlayTile.GetComponent<OverlayTile>(), inRangeTiles);
-
-                foreach (var tile in inRangeTiles)
+                if (!isMoving)
                 {
-                    tile.SetArrowSprite(ArrowDiewctions.None);
+                    overlayTile = focusedTileHit.Value.collider.gameObject;
+                    transform.position = overlayTile.transform.position;
+                    gameObject.GetComponent<SpriteRenderer>().sortingOrder = 50;
+
                 }
-                if (moveAction)
+
+                if (!isMoving && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()))
                 {
-                    for (int i = 0; i < path.Count; i++)
-                    {
-                        var previousTile = i > 0 ? path[i - 1] : character.activeTile;
-                        var futureTile = i < path.Count - 1 ? path[i + 1] : null;
+                    path = pathFinder.FindPath(character.activeTile, overlayTile.GetComponent<OverlayTile>(), inRangeTiles);
 
-                        var arrowDirection = arrowtranslator.TranslateDirections(previousTile, path[i], futureTile);
-                        path[i].SetArrowSprite(arrowDirection);
+                    foreach (var tile in inRangeTiles)
+                    {
+                        tile.SetArrowSprite(ArrowDiewctions.None);
                     }
-                }
-               
-            }
-
-            //Clic en casilla
-           if (Input.GetMouseButtonDown(0))
-            {
-
-                if (attackAction)
-                {
-                    if (inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()) && overlayTile.GetComponent<OverlayTile>().characterInTile != null)
+                    if (moveAction)
                     {
-                        character.basicAttack(overlayTile.GetComponent<OverlayTile>().characterInTile.GetComponent<CharacterInfo>());
-                        character.haveAttacked = true;
-                        ResetAction();
-                    }
-                    else
-                        ResetAction();
-                }else if (abilityAction)
-                {
-                    if (inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()) && overlayTile.GetComponent<OverlayTile>().characterInTile != null)
-                    {
-
-                        Debug.Log("Dentro de ejecutar la acción");
-                        selectedAbility.ApplyEffect(character, overlayTile.GetComponent<OverlayTile>().characterInTile);
-
-                        character.haveAttacked = true;
-                        ResetAction();
-                    }
-                    else
-                    {
-                        Debug.Log("No ha salido bien");
-                        ResetAction();
-                    }
-                       
-                }
-                else
-                {
-                    //Si no hay character focus
-                    if (character == null && overlayTile.GetComponent<OverlayTile>().characterInTile != null)
-                    {
-                        isFreeFocus = false;
-                        character = overlayTile.GetComponent<OverlayTile>().characterInTile;
-                        character.isFocused = true;
-                        character.menu.SetActive(true);
-                        CanvasInstance.Instance.characterInfoBox.SetActive(true);
-                        CanvasInstance.Instance.characterInfoBox.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
-
-                    }
-                    //Si hay character focus y se ha clicado a mover
-                    else if (moveAction && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()))
-                    {
-                       
-                        transform.position = overlayTile.transform.position;
-                        gameObject.GetComponent<SpriteRenderer>().sortingOrder = 50;
-
-                        character.activeTile.characterInTile = null;
-                        overlayTile.GetComponent<OverlayTile>().characterInTile = character;
-                        foreach (var tile in inRangeTiles)
+                        for (int i = 0; i < path.Count; i++)
                         {
-                            tile.SetArrowSprite(ArrowDiewctions.None);
-                            tile.HideTile();
+                            var previousTile = i > 0 ? path[i - 1] : character.activeTile;
+                            var futureTile = i < path.Count - 1 ? path[i + 1] : null;
+
+                            var arrowDirection = arrowtranslator.TranslateDirections(previousTile, path[i], futureTile);
+                            path[i].SetArrowSprite(arrowDirection);
+                        }
+                    }
+
+                }
+
+                //Clic en casilla
+                if (Input.GetMouseButtonDown(0))
+                {
+
+                    if (attackAction)
+                    {
+                        if (inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()) && overlayTile.GetComponent<OverlayTile>().characterInTile != null && overlayTile.GetComponent<OverlayTile>().characterInTile.team == Team.Enemy)
+                        {
+                            character.basicAttack(overlayTile.GetComponent<OverlayTile>().characterInTile.GetComponent<CharacterInfo>());
+                            character.haveAttacked = true;
+                            ResetAction();
+                        }
+                        else
+                            ResetAction();
+                    }
+                    else if (abilityAction)
+                    {
+                        if (inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()) && overlayTile.GetComponent<OverlayTile>().characterInTile != null)
+                        {
+
+                            Debug.Log("Dentro de ejecutar la acción");
+                            selectedAbility.ApplyEffect(character, overlayTile.GetComponent<OverlayTile>().characterInTile);
+
+                            character.haveAttacked = true;
+                            ResetAction();
+                        }
+                        else
+                        {
+                            Debug.Log("No ha salido bien");
+                            ResetAction();
                         }
 
-                        isMoving = true;
-                        character.menu.SetActive(false);
-                        
-
                     }
+                    else
+                    {
+                        //Si no hay character focus
+                        if (character == null && overlayTile.GetComponent<OverlayTile>().characterInTile != null)
+                        {
+                            isFreeFocus = false;
+                            character = overlayTile.GetComponent<OverlayTile>().characterInTile;
+                            character.isFocused = true;
+                            character.menu.SetActive(true);
+                            CanvasInstance.Instance.characterInfoBox.SetActive(true);
+                            CanvasInstance.Instance.characterInfoBox.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
+
+                        }
+                        //Si hay character focus y se ha clicado a mover
+                        else if (moveAction && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()))
+                        {
+
+                            transform.position = overlayTile.transform.position;
+                            gameObject.GetComponent<SpriteRenderer>().sortingOrder = 50;
+
+                            character.activeTile.characterInTile = null;
+                            overlayTile.GetComponent<OverlayTile>().characterInTile = character;
+                            foreach (var tile in inRangeTiles)
+                            {
+                                tile.SetArrowSprite(ArrowDiewctions.None);
+                                tile.HideTile();
+                            }
+
+                            isMoving = true;
+                            character.menu.SetActive(false);
+
+
+                        }
+                    }
+
+
                 }
-               
+
+
+                //Para recorrer todo el path
+                if (path.Count > 0 && isMoving)
+                {
+                    MoveCharacterAlongPath();
+
+                }
 
             }
-
-
-           //Para recorrer todo el path
-            if (path.Count > 0 && isMoving)
-            {
-                MoveCharacterAlongPath();
-
-            }
-
         }
         
     }
@@ -168,7 +172,6 @@ public class MouseController : MonoBehaviour
         character.menu.SetActive(false);
         CanvasInstance.Instance.characterInfoBox.SetActive(false);
         CanvasInstance.Instance.characterInfoBox.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
-        character = null;
         isMoving = false;
         moveAction = false;
         attackAction = false;
@@ -180,6 +183,9 @@ public class MouseController : MonoBehaviour
             tile.HideTile();
         }
             inRangeTiles = new List<OverlayTile>();
+
+        TurnSistem.Instance.EndAction(character);
+        character = null;
 
     }
 
@@ -222,16 +228,21 @@ public class MouseController : MonoBehaviour
 
         if (path.Count == 0)
         {
-            isFreeFocus = false;
-            inRangeTiles = new List<OverlayTile>();
-            isMoving = false;
             character.haveMoved = true;
-            
-            moveAction = false;
-            character.menu.SetActive(true);
-            
-            //character.isFocused = false;
-            //character.GetComponent<SpriteRenderer>().color = new Color(0.75f, 0.75f, 0.75f, 1);
+
+            if (character.haveAttacked)
+            {
+                ResetAction();
+            }
+            else
+            {
+                isFreeFocus = false;
+                inRangeTiles = new List<OverlayTile>();
+                isMoving = false;
+
+                moveAction = false;
+                character.menu.SetActive(true);
+            }
 
         }
 

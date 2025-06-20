@@ -62,6 +62,7 @@ public class MapManager : MonoBehaviour
 
         spawnSystem.SpawnAllies(map);
         spawnSystem.SpawnEnemys(map);
+        TurnSistem.Instance.InitialzeTeams();
 
     }
 

@@ -13,6 +13,8 @@ public class SpawnSystem : MonoBehaviour
     {
         foreach (var character in allieTeam)
         {
+            character.GetComponent<CharacterInfo>().team = Team.Ally;
+            //TurnSistem.Instance.AllyList.Add(character.GetComponent<CharacterInfo>());
             foreach (var tile in map)
             {
                 if (tile.Value.gridPosition.Equals(character.GetComponent<CharacterInfo>().SpawnPosition))
@@ -21,7 +23,7 @@ public class SpawnSystem : MonoBehaviour
                   
                     character.GetComponent<CharacterInfo>().activeTile = tile.Value;
                     CharacterInfo newCharacter = character.GetComponent<CharacterInfo>();
-                    newCharacter = Instantiate(character).GetComponent<CharacterInfo>();
+                    newCharacter = Instantiate(character, TurnSistem.Instance.AllyTeam.transform).GetComponent<CharacterInfo>();
                     tile.Value.characterInTile = newCharacter;
                     break;
                 }
@@ -33,6 +35,8 @@ public class SpawnSystem : MonoBehaviour
     {
         foreach (var character in enemyTeam)
         {
+            character.GetComponent<CharacterInfo>().team = Team.Enemy;
+            //TurnSistem.Instance.EnemyList.Add(character.GetComponent<CharacterInfo>());
             foreach (var tile in map)
             {
                 if (tile.Value.gridPosition.Equals(character.GetComponent<CharacterInfo>().SpawnPosition))
@@ -41,7 +45,7 @@ public class SpawnSystem : MonoBehaviour
 
                     character.GetComponent<CharacterInfo>().activeTile = tile.Value;
                     CharacterInfo newCharacter = character.GetComponent<CharacterInfo>();
-                    newCharacter = Instantiate(character).GetComponent<CharacterInfo>();
+                    newCharacter = Instantiate(character, TurnSistem.Instance.EnemyTeam.transform).GetComponent<CharacterInfo>();
                     tile.Value.characterInTile = newCharacter;
                     break;
                 }

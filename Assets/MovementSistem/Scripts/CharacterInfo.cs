@@ -9,6 +9,8 @@ public class CharacterInfo : MonoBehaviour
    
     public Sprite portrait;
     
+    public Team team = Team.None;
+
     public bool haveMoved = false;
     public bool haveAttacked = false;
     public bool isFocused = false;
