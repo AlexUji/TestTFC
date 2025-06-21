@@ -123,6 +123,7 @@ public class MouseController : MonoBehaviour
                             character.menu.SetActive(true);
                             CanvasInstance.Instance.characterInfoBox.SetActive(true);
                             CanvasInstance.Instance.characterInfoBox.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
+                            CanvasInstance.Instance.btnQuit.SetActive(true);
 
                         }
                         //Si hay character focus y se ha clicado a mover

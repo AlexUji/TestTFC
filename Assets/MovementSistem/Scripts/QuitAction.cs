@@ -25,7 +25,9 @@ public class QuitAction : MonoBehaviour
 
             if (hit.collider.name == "quit")
             {
-               mouseController.ResetAction();
+                mouseController.character.haveAttacked = true;
+                mouseController.character.haveMoved = true;
+                mouseController.ResetAction();
 
             }
         }

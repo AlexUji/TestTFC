@@ -193,6 +193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityName: 
   abilityInfoText: 
+  type: 
   manaCost: 5
   abilityRange: 5
   levelToUnlock: 1
@@ -488,6 +489,7 @@ MonoBehaviour:
   SpawnPosition: {x: 0, y: -3, z: 0}
   activeTile: {fileID: 0}
   portrait: {fileID: 7625575254771426721, guid: a2f48330621149245a8dc32062d303ea, type: 3}
+  team: 0
   haveMoved: 0
   haveAttacked: 0
   isFocused: 0
@@ -500,7 +502,8 @@ MonoBehaviour:
   - {fileID: 5101035478216661693}
   menu: {fileID: 2388184614966042728}
   menuSprites: []
-  level: 1
+  enemyCount: 0
+  level: 10
   MaxHP: 350
   MaxMP: 10
   currentHP: 250
