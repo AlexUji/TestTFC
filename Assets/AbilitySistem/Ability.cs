@@ -6,7 +6,7 @@ public class Ability : MonoBehaviour
     public string abilityName;
     public StringBuilder sb = new StringBuilder();
     public string abilityInfoText;
-    public string type;
+    public UnitType type;
     //animación
     public int manaCost;
     public int abilityRange;

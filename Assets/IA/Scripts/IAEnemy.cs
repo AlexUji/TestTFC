@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI.Table;
 using static UnityEngine.UI.Image;
@@ -14,22 +15,25 @@ public struct IAInfo
 {
     public GameObject enemyTeam;
     public GameObject allyTeam;
-    public GameObject selectedTroop;
-    public GameObject selectedEnemyTroop;
+    public CharacterInfo selectedTroop;
+    public CharacterInfo selectedEnemyTroop;
+    public List<CharacterInfo> enemiesInRange;
+    public List<CharacterInfo> alliesInRange;
+    public List<(CharacterInfo,Ability)> CharacterInRange_plus_ability;
 }
 
 public class IAEnemy : MonoBehaviour
 {
 
     IANode n_root;
-    //GameManager gm;
+    TurnSistem turnSistem;
     private float thinkTimer = 0f; // Temporizador
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
-        //gm = GameManager.Instance;
+
+        turnSistem = TurnSistem.Instance;
         InitializeIA();
         Think();
     }
@@ -83,6 +87,11 @@ public class IAEnemy : MonoBehaviour
         IAHasAction hasAction = new IAHasAction(hasAttacked,skip);
 
         n_root = hasAction;
+
+        // Seleccionamos a la primera unidad a evaluar
+
+        turnSistem.InitialiceIAInfo();
+        turnSistem.SelectTroop();
     }
 
     // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -95,27 +104,14 @@ public class IAEnemy : MonoBehaviour
 
         public override void Action()
         {
-            // Si tenemos mas tropas pero menos casillas pintadas, priorizamos movernos para pintar
-            /*
-            if (GameManager.Instance.GetTurn() > 18 ||
-                GameManager.Instance.GetCoins(Team.Red) + 3 + GameManager.Instance.enemyTroops.Count > 20 ||
-                GameManager.Instance.enemyTroops.Count <= 1)
+            if (TurnSistem.Instance.IAInfo.selectedTroop.haveActions)
             {
-
-                if (GameManager.Instance.enemyTroops.Count > GameManager.Instance.playerTroops.Count &&
-                GameManager.Instance.board.GetColorCellAmount(Team.Red) < GameManager.Instance.board.GetColorCellAmount(Team.Blue))
-                {
-                    n_false.Action();
-                }
-                else
-                {
-                    n_true.Action();
-                }
+                n_true.Action();
             }
             else
             {
                 n_false.Action();
-            }*/
+            }
         }
     }
 
@@ -125,11 +121,14 @@ public class IAEnemy : MonoBehaviour
 
         public override void Action()
         {
-            /* if (GameManager.Instance.enemyTroops.Count > 0)
-                 n_true.Action();
-             else
-                 n_false.Action();
-            */
+            if (TurnSistem.Instance.IAInfo.selectedTroop.haveMoved)
+            {
+                n_true.Action();
+            }
+            else
+            {
+                n_false.Action();
+            }
         }
     }
 
@@ -138,56 +137,16 @@ public class IAEnemy : MonoBehaviour
         public IAHasAttack(IANode nodeTrue, IANode nodeFalse) : base(nodeTrue, nodeFalse) { }
 
         public override void Action()
-        {/*
-            BoardGrid board = GameManager.Instance.board; // Referencia al tablero
-            Cell[,] grid = board.GetBoard();
-            List<(Troop attacker, Troop target)> attackPairs = new List<(Troop, Troop)>(); // Lista de ataques posibles
-
-            foreach (Troop t in GameManager.Instance.enemyTroops)
+        {
+            if (TurnSistem.Instance.IAInfo.selectedTroop.haveAttacked)
             {
-
-                Cell currentCell = t.GetComponentInParent<Cell>();
-                (int, int) pos = currentCell.GetGridPosition(); // Usamos GetGridPosition del Cell
-
-                for (int x = -t.attackRange; x <= t.attackRange; x++)
-                {
-                    for (int y = -t.attackRange; y <= t.attackRange; y++)
-                    {
-                        if (x == 0 && y == 0) continue; // Ignoramos la celda de origen
-
-                        int targetX = pos.Item1 + x;
-                        int targetY = pos.Item2 + y;
-
-                        if (IsValidPosition(targetX, targetY, grid)) // Validamos coordenadas con la matriz
-                        {
-                            Cell targetCell = grid[targetX, targetY];
-                            if (targetCell.transform.childCount != 0)
-                            {
-                                Troop target = targetCell.transform.GetChild(0).GetComponent<Troop>();
-                                if (target.team == Team.Blue) // Encontramos una tropa enemiga
-                                {
-                                    attackPairs.Add((t, target));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (attackPairs.Count > 0)
-            {
-                IAAttack attackNode = n_true as IAAttack;
-                attackNode.SetValues(attackPairs);
                 n_true.Action();
             }
             else
+            {
                 n_false.Action();
-            */
+            }
         }
-        /*private bool IsValidPosition(int x, int y, Cell[,] grid)
-        {
-            // Comprueba si las coordenadas están dentro de los límites del tablero
-            return x >= 0 && x < grid.GetLength(0) && y >= 0 && y < grid.GetLength(1);
-        }*/
     }
 
     class IAHabilityRange : IASequenceNode
@@ -195,18 +154,35 @@ public class IAEnemy : MonoBehaviour
         public IAHabilityRange(IANode nodeTrue, IANode nodeFalse) : base(nodeTrue, nodeFalse) { }
 
         public override void Action()
-        {/*
-            if (GameManager.Instance.playerTroops.Count == 0 || GameManager.Instance.enemyTroops.Count > GameManager.Instance.playerTroops.Count)
+        {
+            RangeFinder rangeFinder = new RangeFinder();
+            TurnSistem ts = TurnSistem.Instance;
+            List<OverlayTile> tilesInrange;
+
+            foreach (Ability ability in ts.IAInfo.selectedTroop.habilities)
             {
-                Debug.Log("Paint");
+                tilesInrange =  rangeFinder.GetTilesInRange(ts.IAInfo.selectedTroop.activeTile, ability.abilityRange);
+
+                foreach (OverlayTile tile in tilesInrange)
+                {
+                    if (tile.characterInTile != null && tile.characterInTile.team == Team.Ally && ability.type == UnitType.Attacker)
+                        ts.IAInfo.CharacterInRange_plus_ability.Add((tile.characterInTile,ability));
+
+                    else if(tile.characterInTile != null && tile.characterInTile.team == Team.Enemy && ability.type == UnitType.Support)
+                        ts.IAInfo.CharacterInRange_plus_ability.Add((tile.characterInTile, ability));
+                }
+
+            }
+
+
+            if (ts.IAInfo.CharacterInRange_plus_ability.Count > 0)
+            {
                 n_true.Action();
             }
             else
             {
-                Debug.Log("Move Path");
                 n_false.Action();
             }
-            */
         }
 
     }
@@ -216,18 +192,25 @@ public class IAEnemy : MonoBehaviour
         public IABasicAttackRange(IANode nodeTrue, IANode nodeFalse) : base(nodeTrue, nodeFalse) { }
 
         public override void Action()
-        {/*
-            if (GameManager.Instance.playerTroops.Count == 0 || GameManager.Instance.enemyTroops.Count > GameManager.Instance.playerTroops.Count)
+        {
+            RangeFinder rangeFinder = new RangeFinder();
+            TurnSistem ts = TurnSistem.Instance;
+            List<OverlayTile> tilesInrange = rangeFinder.GetTilesInRange(ts.IAInfo.selectedTroop.activeTile, ts.IAInfo.selectedTroop.atackRange);
+
+            foreach (OverlayTile tile in tilesInrange)
             {
-                Debug.Log("Paint");
+                if (tile.characterInTile != null && tile.characterInTile.team == Team.Ally)
+                    ts.IAInfo.enemiesInRange.Add(tile.characterInTile);
+            }
+
+            if(ts.IAInfo.enemiesInRange.Count > 0)
+            {
                 n_true.Action();
             }
             else
             {
-                Debug.Log("Move Path");
                 n_false.Action();
             }
-            */
         }
 
     }

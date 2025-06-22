@@ -62,7 +62,7 @@ public class MoveCharacter : MonoBehaviour
 
         foreach (var tile in mouseController.inRangeTiles)
         {
-            tile.ShowTile("move");
+            tile.ShowTile(UnitType.move);
         }
     }
 

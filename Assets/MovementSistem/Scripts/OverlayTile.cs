@@ -26,12 +26,12 @@ public class OverlayTile : MonoBehaviour
         }
 
     }
-    public void ShowTile(string order)
+    public void ShowTile(UnitType order)
     {
         gameObject.GetComponent<SpriteRenderer>().enabled = true;
-        if(order == "attack")
+        if(order == UnitType.Attacker)
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 1);
-        else if (order == "support")
+        else if (order == UnitType.Support)
             gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 1, 0, 1);
         else
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);

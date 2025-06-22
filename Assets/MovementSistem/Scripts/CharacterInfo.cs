@@ -10,6 +10,7 @@ public class CharacterInfo : MonoBehaviour
     public Sprite portrait;
 
     public Team team = Team.None;
+    public UnitType type;
 
     public bool haveMoved = false;
     public bool haveAttacked = false;

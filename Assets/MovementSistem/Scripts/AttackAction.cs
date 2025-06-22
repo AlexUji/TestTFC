@@ -60,7 +60,7 @@ public class AttackAction : MonoBehaviour
 
         foreach (var tile in mouseController.inRangeTiles)
         {
-            tile.ShowTile("attack");
+            tile.ShowTile(UnitType.Attacker);
         }
     }
 

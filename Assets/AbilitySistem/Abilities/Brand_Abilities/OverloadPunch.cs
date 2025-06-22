@@ -16,7 +16,7 @@ public class OverloadPunch : Ability
         manaCost = 2;
         levelToUnlock = 1;
         abilityRange = 1;
-        type = "attack";
+        type = UnitType.Attacker;
     }
 
     public override void ApplyEffect(CharacterInfo selfCharacter, CharacterInfo targetCharacter)

@@ -12,6 +12,8 @@ public class TurnSistem : MonoBehaviour
     public bool EnemyTurn = false;
     public int AllyActionsPerTurn = 0;
     public int EnemyActionsPerTurn = 0;
+    private int idTroop = 0;
+    public IAInfo IAInfo;
 
 
 
@@ -83,6 +85,20 @@ public class TurnSistem : MonoBehaviour
             }
 
         }
+    }
+
+    public void InitialiceIAInfo()
+    {
+        idTroop = 0;
+        IAInfo.allyTeam = AllyTeam;
+        IAInfo.enemyTeam = EnemyTeam;
+    } 
+
+    public void SelectTroop()
+    {
+        IAInfo.selectedTroop = EnemyTeam.transform.GetChild(idTroop).GetComponent<CharacterInfo>();
+        idTroop++;
+
     }
 
 }
