@@ -129,7 +129,7 @@ public class MouseController : MonoBehaviour
                         //Si hay character focus y se ha clicado a mover
                         else if (moveAction && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()) && overlayTile.GetComponent<OverlayTile>().characterInTile == null)
                         {
-
+                            TurnSistem.Instance.UpdateInfluence();//Actualiza la influencia al moverse
                             transform.position = overlayTile.transform.position;
                             gameObject.GetComponent<SpriteRenderer>().sortingOrder = 50;
 

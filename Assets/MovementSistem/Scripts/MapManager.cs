@@ -63,6 +63,10 @@ public class MapManager : MonoBehaviour
         spawnSystem.SpawnAllies(map);
         spawnSystem.SpawnEnemys(map);
         TurnSistem.Instance.InitialzeTeams();
+        foreach (var tile in map)
+        {
+            Debug.Log(tile.Value.influence);
+        }
 
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -20,6 +21,7 @@ public struct IAInfo
     public List<CharacterInfo> enemiesInRange;
     public List<CharacterInfo> alliesInRange;
     public List<(CharacterInfo,Ability)> CharacterInRange_plus_ability;
+    public float amountOfInfluence;
 }
 
 public class IAEnemy : MonoBehaviour
@@ -220,66 +222,58 @@ public class IAEnemy : MonoBehaviour
     // -----------------------------------------------------------------------------------------------------------------------------------------
     class IABasicAttack : IANode
     {
-        /*
-        List<(Troop, Troop)> attackPairs; // Lista de ataques posibles        
+        TurnSistem ts = TurnSistem.Instance;
+        List<CharacterInfo> enemiesInRange = new List<CharacterInfo> ();
+        RangeFinder rangeFinder = new RangeFinder();
+        CharacterInfo slectedEnemy = null;
 
-        public void SetValues(List<(Troop, Troop)> _attackPairs)
-        {
-            attackPairs = _attackPairs;
 
-        }
+
         public override void Action()
         {
-            GameManager.Instance.enemyTroops = GameManager.Instance.GetTroops(Team.Red); // Todas las tropas enemigas     
+            enemiesInRange = ts.IAInfo.enemiesInRange;
+            ts.UpdateAmountOfInfluence();
+            float previousAmountOfInfluence = ts.IAInfo.amountOfInfluence;
+            float simulatedAmountofInfluence = previousAmountOfInfluence;
 
-            // Lógica para seleccionar el mejor ataque
-            (Troop, Troop) atacantes = SelectBestAttack(attackPairs);
-            Troop attacker = atacantes.Item1;
-            Troop target = atacantes.Item2;
-            Debug.Log($"{attacker.name} ataca a {target.name}");
-
-            // Realizamos el ataque
-            if (attacker is Tower)
+            foreach (CharacterInfo enemy in enemiesInRange)
             {
-                GameManager.Instance.board.AttackWithTroop(attacker, target);
-            }
-            else
-            {
-                attacker.Attack(target);
+                int enemyLife = enemy.currentHP;
+                enemyLife -= ts.IAInfo.selectedTroop.attack - enemy.defense;
+                
+                //Mataria a la tropa enemiga
+                if (enemyLife <= 0)
+                {
+                    simulatedAmountofInfluence -= 2;
+
+                    List<OverlayTile> neighboursTiles = MapManager.Instance.GetNeighboursNodes(enemy.activeTile, rangeFinder.GetTilesInRange(enemy.activeTile, 1));
+                    foreach (OverlayTile nTile in neighboursTiles)
+                    {
+                        simulatedAmountofInfluence -= 0.25f;
+                    }
+
+                }
+                //No la mataria
+                else
+                {
+                    simulatedAmountofInfluence -= 0.25f;
+                }
+                
+                //Comprueba si es la mejor jugada hasta el momento
+                if(simulatedAmountofInfluence < previousAmountOfInfluence)
+                {
+                    previousAmountOfInfluence = simulatedAmountofInfluence;
+                    slectedEnemy = enemy;
+                }
+                   
+
+                simulatedAmountofInfluence = ts.IAInfo.amountOfInfluence;
             }
 
-            GameManager.Instance.UseAction();//ESTO CUANDO SE META EN EL ARBOL BIEN HAY QUE QUITARLO DE AQUI
-            Debug.Log("Ataque realizado");
+            //Realiza la mejor acción y actualiza la influencia si es necesario
+            ts.IAInfo.selectedTroop.IAbasicAttack(slectedEnemy);
+            
         }
-
-        public (Troop attacker, Troop target) SelectBestAttack(List<(Troop attacker, Troop target)> attackPairs)
-        {
-            (Troop bestAttacker, Troop bestTarget) bestAttack = (null, null);
-            float bestDamage = float.MinValue;
-
-            foreach (var attackPair in attackPairs)
-            {
-                Troop attacker = attackPair.attacker;
-                Troop target = attackPair.target;
-
-                // Check if the attack will kill the target
-                if (target.health - target.damage <= 0)
-                {
-                    // If this attack kills the target, choose it
-                    return attackPair;
-                }
-
-                // Otherwise, check if this attack deals more damage than the previous best
-                if (target.damage > bestDamage)
-                {
-                    bestDamage = target.damage;
-                    bestAttack.bestAttacker = attacker;
-                    bestAttack.bestTarget = target;
-                }
-            }
-
-            return bestAttack;
-        }*/
     }
 
     class IAHability : IANode

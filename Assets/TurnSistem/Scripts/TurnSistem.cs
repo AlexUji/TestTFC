@@ -6,8 +6,10 @@ using UnityEngine;
 public class TurnSistem : MonoBehaviour
 {
     public static TurnSistem Instance;
+    private RangeFinder RangeFinder;
     public GameObject AllyTeam;
     public GameObject EnemyTeam;
+    public GameObject Map;
     public bool AllyTurn = true;
     public bool EnemyTurn = false;
     public int AllyActionsPerTurn = 0;
@@ -21,7 +23,10 @@ public class TurnSistem : MonoBehaviour
     {
         Instance = this;
     }
-
+    private void Start()
+    {
+        RangeFinder = new RangeFinder();
+    }
     public void ResetTeams()
     {
         foreach (GameObject character in AllyTeam.transform)
@@ -101,4 +106,132 @@ public class TurnSistem : MonoBehaviour
 
     }
 
+    public void UpdateInfluenceMovement(OverlayTile posIni, OverlayTile posF)
+    {
+        float substractInf;
+        float sumInfluence = 0;
+        float finalInfluence = 0;
+
+        if (posIni.characterInTile.team == Team.Ally)
+        {
+            substractInf = -0.25f;
+            finalInfluence = 1;
+        }           
+        else
+        {
+            substractInf = 0.25f;
+            finalInfluence = -1;
+        }
+
+
+        List<OverlayTile> neighboursTiles = MapManager.Instance.GetNeighboursNodes(posIni, RangeFinder.GetTilesInRange(posIni, 1));
+        foreach (OverlayTile nTile in neighboursTiles)
+        {
+            if (nTile.influence != -1 && nTile.influence != 1)
+            {
+                nTile.influence += substractInf;
+
+                if (nTile.influence < -1)
+                    nTile.influence = -1;
+                else if (nTile.influence > 1)
+                    nTile.influence = 1;
+
+               
+            }
+            sumInfluence += nTile.influence;
+        }
+        if(sumInfluence > 1)
+            sumInfluence = 1;
+        else if (sumInfluence < -1)
+            sumInfluence = -1;
+
+        posIni.influence = sumInfluence;
+
+        neighboursTiles = MapManager.Instance.GetNeighboursNodes(posF, RangeFinder.GetTilesInRange(posF, 1));
+
+        foreach (OverlayTile nTile in neighboursTiles)
+        {
+            if (nTile.influence != -1 && nTile.influence != 1)
+            {
+                nTile.influence += substractInf;
+
+                if (nTile.influence < -1)
+                    nTile.influence = -1;
+                else if (nTile.influence > 1)
+                    nTile.influence = 1;
+
+            }            
+        }
+        posF.influence = finalInfluence;
+
+    }
+
+    public void UpdateInfluenceUnitSlayed(OverlayTile posIni)
+    {
+        posIni.influence = 0;
+        float sumInfluence = 0;
+
+        List<OverlayTile> neighboursTiles = MapManager.Instance.GetNeighboursNodes(posIni, RangeFinder.GetTilesInRange(posIni, 1));
+        foreach (OverlayTile nTile in neighboursTiles)
+        {
+            sumInfluence += nTile.influence;
+        }
+           
+
+        if (sumInfluence > 1)
+            sumInfluence = 1;
+        else if (sumInfluence < -1)
+            sumInfluence = -1;
+
+        posIni.influence = sumInfluence;
+    }
+
+    public void UpdateInfluence()
+    {
+        foreach (Transform tile in Map.transform)
+        {
+           if(tile.GetComponent<OverlayTile>().characterInTile != null)
+            {
+                if(tile.GetComponent<OverlayTile>().characterInTile.team == Team.Ally)
+                {
+                    tile.GetComponent<OverlayTile>().influence = 1;
+                    List <OverlayTile> neighboursTiles = MapManager.Instance.GetNeighboursNodes(tile.GetComponent<OverlayTile>(), RangeFinder.GetTilesInRange(tile.GetComponent<OverlayTile>(), 1));
+                    foreach (OverlayTile nTile in neighboursTiles)
+                    {
+                        if (nTile.influence != 1 && nTile.influence != -1)
+                        {
+                            nTile.influence += 0.25f;
+                            if (nTile.influence > 1)
+                                nTile.influence = 1;
+                        }
+
+                    }
+                }
+                else if (tile.GetComponent<OverlayTile>().characterInTile.team == Team.Ally)
+                {
+                    tile.GetComponent<OverlayTile>().influence = -1;
+                    List<OverlayTile> neighboursTiles = MapManager.Instance.GetNeighboursNodes(tile.GetComponent<OverlayTile>(), RangeFinder.GetTilesInRange(tile.GetComponent<OverlayTile>(), 1));
+                    foreach (OverlayTile nTile in neighboursTiles)
+                    {
+                        if (nTile.influence != 1 && nTile.influence != -1)
+                        {
+                            nTile.influence -= 0.25f;
+                            if (nTile.influence < -1)
+                                nTile.influence = -1;
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+    public void UpdateAmountOfInfluence()
+    {
+        IAInfo.amountOfInfluence = 0;
+        foreach (Transform tile in Map.transform)
+        {
+            IAInfo.amountOfInfluence += tile.GetComponent<OverlayTile>().influence;
+        }
+    }
 }

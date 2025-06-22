@@ -62,6 +62,7 @@ public class CharacterInfo : MonoBehaviour
     public void EnemySlayed(CharacterInfo enemy)
     {
         Debug.Log(enemy.gameObject.name + "Estaaaa moooortooo");
+        TurnSistem.Instance.UpdateInfluence(); //Actualiza el mapa de influencia
         Destroy(enemy.gameObject);
         enemyCount++;
         if (enemyCount >= 3)
@@ -77,6 +78,7 @@ public class CharacterInfo : MonoBehaviour
     public void IAEnemySlayed(CharacterInfo enemy)
     {
         Debug.Log(enemy.gameObject.name + "Estaaaa moooortooo");
+        TurnSistem.Instance.UpdateInfluence();
         Destroy(enemy.gameObject);
        
     }
