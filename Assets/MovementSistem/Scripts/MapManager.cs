@@ -30,6 +30,7 @@ public class MapManager : MonoBehaviour
        
         var tileMap = gameObject.GetComponentInChildren<Tilemap>();
         map = new Dictionary<Vector2Int, OverlayTile>();
+        List<OverlayTile> mapInTiles = TurnSistem.Instance.MapinTiles;
 
         BoundsInt bounds = tileMap.cellBounds;
 
@@ -55,6 +56,9 @@ public class MapManager : MonoBehaviour
                         
                         overlayTile.gridPosition = tileLocation;
                         map.Add(tileKey, overlayTile);
+                        //**********************************//
+                        mapInTiles.Add(overlayTile);
+                        
                     }
                 }
             }

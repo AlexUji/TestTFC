@@ -21,6 +21,7 @@ public struct IAInfo
     public List<CharacterInfo> enemiesInRange;
     public List<CharacterInfo> alliesInRange;
     public List<(CharacterInfo,Ability)> CharacterInRange_plus_ability;
+    public List<OverlayTile> posibleBestTilesForMovement;
     public float amountOfInfluence;
 }
 
@@ -163,15 +164,19 @@ public class IAEnemy : MonoBehaviour
 
             foreach (Ability ability in ts.IAInfo.selectedTroop.habilities)
             {
-                tilesInrange =  rangeFinder.GetTilesInRange(ts.IAInfo.selectedTroop.activeTile, ability.abilityRange);
-
-                foreach (OverlayTile tile in tilesInrange)
+                if (ability.manaCost <= ts.IAInfo.selectedTroop.currentMP && ability.levelToUnlock <= ts.IAInfo.selectedTroop.level) //Puedes usar la habilidad
                 {
-                    if (tile.characterInTile != null && tile.characterInTile.team == Team.Ally && ability.type == UnitType.Attacker)
-                        ts.IAInfo.CharacterInRange_plus_ability.Add((tile.characterInTile,ability));
+                    tilesInrange = rangeFinder.GetTilesInRange(ts.IAInfo.selectedTroop.activeTile, ability.abilityRange); //Obtienes el rango de acción de la habilidad
 
-                    else if(tile.characterInTile != null && tile.characterInTile.team == Team.Enemy && ability.type == UnitType.Support)
-                        ts.IAInfo.CharacterInRange_plus_ability.Add((tile.characterInTile, ability));
+                    foreach (OverlayTile tile in tilesInrange)
+                    {
+                        //Compruebas si se puede usar en función del tipo de habilidad que se esta usando
+                        if (tile.characterInTile != null && tile.characterInTile.team == Team.Ally && ability.type == UnitType.Attacker)
+                            ts.IAInfo.CharacterInRange_plus_ability.Add((tile.characterInTile, ability));
+
+                        else if (tile.characterInTile != null && tile.characterInTile.team == Team.Enemy && ability.type == UnitType.Support)
+                            ts.IAInfo.CharacterInRange_plus_ability.Add((tile.characterInTile, ability));
+                    }
                 }
 
             }
@@ -596,181 +601,110 @@ public class IAEnemy : MonoBehaviour
     }
 
     class IAMove : IANode
-    {/*
-        List<Troop> playerTroops;
-        List<Troop> enemyTroops;
-
-        Node[] path;
-        int steps;
-
-        Troop actualTroop;
-
-        int index;
+    {
+        TurnSistem ts = TurnSistem.Instance; 
+        RangeFinder rangeFinder = new RangeFinder();
+        CharacterInfo slectedEnemy = null;
+        List<OverlayTile> bestMovementTiles;
+        List<OverlayTile> movementRange;
+        List<OverlayTile> path;
+        OverlayTile bestTile = null;
+        OverlayTile finalTile = null;
+        PathFinder pathFinder = new PathFinder();
 
         public override void Action()
         {
-            Debug.Log("Mover");
-            playerTroops = GameManager.Instance.playerTroops;
-            enemyTroops = GameManager.Instance.enemyTroops;
+            bestMovementTiles = ts.IAInfo.posibleBestTilesForMovement; //Obtenemos las tile vacias que tienen influencia
+            float bestScore = 0;
+            
 
-            path = null;
-            steps = 1000;
-            index = 0;
-
-            actualTroop = null;
-
-            if (path == null && playerTroops.Count > 0 && enemyTroops.Count > 0)
+            //Primero obtenemos la mejor tile a la que se podría ir
+            if(ts.IAInfo.selectedTroop.type == UnitType.Attacker)
             {
-                foreach (Troop ETroop in enemyTroops)
+                foreach (OverlayTile tile in bestMovementTiles)
                 {
-                    foreach (Troop PTroop in playerTroops)
+                    if (tile.influence > bestScore)
                     {
-                        if (ETroop == null || PTroop == null) continue;
-
-                        Cell ECell = ETroop.transform.parent.GetComponent<Cell>();
-                        Cell PCell = PTroop.transform.parent.GetComponent<Cell>();
-
-                        if (ECell == null || PCell == null) continue;
-
-                        (int, int) EPos = ECell.GetGridPosition();
-                        (int, int) PPos = PCell.GetGridPosition();
-
-                        // Calcula el vector de dirección desde PPos hacia EPos
-                        int dirX = EPos.Item1 - PPos.Item1;
-                        int dirY = EPos.Item2 - PPos.Item2;
-
-                        // Normaliza el vector (reduce a una dirección de paso único)
-                        int stepX = dirX != 0 ? dirX / Math.Abs(dirX) : 0;
-                        int stepY = dirY != 0 ? dirY / Math.Abs(dirY) : 0;
-
-                        // Calcula la posición ajustada (por ejemplo, a 1 celda de distancia)
-                        int adjustedX = PPos.Item1 + stepX * ETroop.attackRange; // Máximo 1 paso
-                        int adjustedY = PPos.Item2 + stepY * ETroop.attackRange;
-
-                        (int, int) adjustedPos = (adjustedX, adjustedY);
-
-                        if (ETroop.moveRange < 1)
-                            AllTowers(enemyTroops);
-
-                        else
-                            PathRequestManager.RequestPath(EPos, adjustedPos, OnPathFound, ETroop.moveRange);
-
+                        bestScore = tile.influence;
+                        bestTile = tile;
                     }
                 }
             }
-            else if (path == null)
+            else
             {
-                if (enemyTroops.Count == 0)
+                foreach (OverlayTile tile in bestMovementTiles)
                 {
-                    Debug.LogError("No hay tropas enemigas disponibles.");
-                    return;
-                }
-
-                index = 0;
-                actualTroop = enemyTroops[index];
-                while (index < enemyTroops.Count && actualTroop != null && actualTroop.moveRange < 1)
-                {
-                    index++;
-                    if (index < enemyTroops.Count)
+                    if (tile.influence < bestScore)
                     {
-                        actualTroop = enemyTroops[index];
+                        bestScore = tile.influence;
+                        bestTile = tile;
                     }
                 }
+            }
 
-                if (index >= enemyTroops.Count || actualTroop == null)
+            // Comprobamos si esta dentro del rango de movimiento de nuestra unidad
+            movementRange = rangeFinder.GetTilesInRange(ts.IAInfo.selectedTroop.activeTile, ts.IAInfo.selectedTroop.movementRange);
+            
+            if (movementRange.Contains(bestTile)) //Si esta en el rango nos movemos directamente a esta
+            {
+                path = pathFinder.FindPath(ts.IAInfo.selectedTroop.activeTile, bestTile, movementRange);
+            }
+            else //Si no esta obtenemos el tile dentro de nuestro rango que este más cerca
+            {
+                int distance = Int32.MaxValue;
+                foreach (OverlayTile tile in movementRange)
                 {
-                    AllTowers(enemyTroops);
-                }
-                else
-                {
-                    Cell ECell = actualTroop.transform.parent.GetComponent<Cell>();
-                    if (ECell == null)
+                    path = pathFinder.FindPath(tile, bestTile, ts.MapinTiles);
+                    if (path.Count < distance) //Está a una distancia menor de la tile deseada
                     {
-                        Debug.LogError("La celda de la tropa actual es nula.");
-                        return;
+                        distance = path.Count;
+                        finalTile = tile;
                     }
-
-                    (int, int) EPos = ECell.GetGridPosition();
-
-                    float maxInfluence = 0;
-                    (int, int) actualPos = (0, 0);
-
-                    for (int i = 0; i < GameManager.Instance.board.rows; i++)
-                    {
-                        for (int j = 0; j < GameManager.Instance.board.columns; j++)
-                        {
-                            if (GameManager.Instance.board.GetCellInfluence(i, j) >= maxInfluence)
-                                if (IsCloser(EPos, actualPos, (i, j)))
-                                {
-                                    actualPos = (i, j);
-                                    maxInfluence = GameManager.Instance.board.GetCellInfluence(i, j);
-                                }
-                        }
-                    }
-
-                    PathRequestManager.RequestPath(EPos, actualPos, OnDiferentPath, actualTroop.moveRange);
                 }
+                //Hacemos movimiento a la tile más cercana
+                path = pathFinder.FindPath(ts.IAInfo.selectedTroop.activeTile, finalTile, movementRange);
+
             }
+
+            while (path.Count > 0)
+            {
+                MoveCharacterAlongPath();
+            }
+
         }
 
-        public static bool IsCloser((int x, int y) point1, (int x, int y) point2, (int x, int y) point3)
-        {
-            float distance1 = MathF.Pow(point3.x - point1.x, 2) + MathF.Pow(point3.y - point1.y, 2);
-            float distance2 = MathF.Pow(point3.x - point2.x, 2) + MathF.Pow(point3.y - point2.y, 2);
 
-            return distance1 < distance2;
+        public void PositionOnTile(OverlayTile tile)
+        {
+            Debug.Log("Pos x: " + tile.transform.position.x + ", Pos y: " + tile.transform.position.y + ", Pos z: " + tile.transform.position.z);
+            ts.IAInfo.selectedTroop.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, tile.transform.position.z);
+            //character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
+            ts.IAInfo.selectedTroop.activeTile = tile;
         }
-
-        public void AllTowers(List<Troop> enemyTroops)
+        private void MoveCharacterAlongPath()
         {
-            bool towers = true;
-            foreach (Troop ETroop in enemyTroops)
-                if (ETroop != null && ETroop.moveRange != 0)
-                    towers = false;
 
-            if (towers)
-                GameManager.Instance.UseAction();
+            var steep = 5 * Time.deltaTime;
+            CharacterInfo character = ts.IAInfo.selectedTroop;
+
+            var zIndex = path[0].transform.position.z;
+            character.transform.position = Vector2.MoveTowards(character.transform.position, path[0].transform.position, steep);
+            character.transform.position = new Vector3(character.transform.position.x, character.transform.position.y, zIndex);
+
+            if (Vector2.Distance(character.transform.position, path[0].transform.position) < 0.0001f)
+            {
+                PositionOnTile(path[0]);
+                path.RemoveAt(0);
+            }
+
+            if (path.Count == 0)
+            {
+                character.haveMoved = true;
+                ts.UpdateInfluence();
+
+            }
+
         }
-
-        public void OnPathFound(Node[] newPath, bool pathSuccessful)
-        {
-            if (newPath == null)
-            {
-                Debug.LogError("El camino encontrado es nulo.");
-                return;
-            }
-
-            int actual = index;
-            index++;
-            if (pathSuccessful)
-            {
-                if (path == null || steps > newPath.Length)
-                {
-                    path = newPath;
-                    steps = path.Length;
-                    actualTroop = enemyTroops[Math.Min(actual / playerTroops.Count, enemyTroops.Count - 1)];
-                }
-            }
-            if (path != null && path.Length > 0 && index >= playerTroops.Count * enemyTroops.Count)
-            {
-                Cell destination = GameManager.Instance.board.GetCell(path[0].gridY, path[0].gridX);
-
-                GameManager.Instance.board.MoveTroop(actualTroop, destination);
-            }
-        }
-
-        public void OnDiferentPath(Node[] newPath, bool pathSuccessful)
-        {
-            if (newPath == null || newPath.Length == 0)
-            {
-                Debug.LogError("El camino diferente es inválido.");
-                return;
-            }
-
-            Cell destination = GameManager.Instance.board.GetCell(newPath[0].gridY, newPath[0].gridX);
-
-            GameManager.Instance.board.MoveTroop(actualTroop, destination);
-        }*/
     }
 
     class IASkipTurn : IANode

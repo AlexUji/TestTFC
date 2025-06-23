@@ -10,6 +10,7 @@ public class TurnSistem : MonoBehaviour
     public GameObject AllyTeam;
     public GameObject EnemyTeam;
     public GameObject Map;
+    public List<OverlayTile> MapinTiles;
     public bool AllyTurn = true;
     public bool EnemyTurn = false;
     public int AllyActionsPerTurn = 0;
@@ -203,11 +204,13 @@ public class TurnSistem : MonoBehaviour
                             nTile.influence += 0.25f;
                             if (nTile.influence > 1)
                                 nTile.influence = 1;
+
+                            IAInfo.posibleBestTilesForMovement.Add(nTile);
                         }
 
                     }
                 }
-                else if (tile.GetComponent<OverlayTile>().characterInTile.team == Team.Ally)
+                else if (tile.GetComponent<OverlayTile>().characterInTile.team == Team.Enemy)
                 {
                     tile.GetComponent<OverlayTile>().influence = -1;
                     List<OverlayTile> neighboursTiles = MapManager.Instance.GetNeighboursNodes(tile.GetComponent<OverlayTile>(), RangeFinder.GetTilesInRange(tile.GetComponent<OverlayTile>(), 1));
@@ -218,6 +221,8 @@ public class TurnSistem : MonoBehaviour
                             nTile.influence -= 0.25f;
                             if (nTile.influence < -1)
                                 nTile.influence = -1;
+
+                            IAInfo.posibleBestTilesForMovement.Add(nTile);
                         }
 
                     }
