@@ -15,6 +15,8 @@ public class TurnSistem : MonoBehaviour
     public bool AllyTurn = true;
     public bool EnemyTurn = false;
     public int AllyActionsPerTurn = 0;
+    public List<OverlayTile> tilesVacias = new List<OverlayTile>();
+    public OverlayTile BestTile;
     public int EnemyActionsPerTurn = 0;
     private int idTroop = 0;
     public IAInfo IAInfo;
@@ -214,7 +216,12 @@ public class TurnSistem : MonoBehaviour
 
     public void UpdateInfluence()
     {
-        IAInfo.posibleBestTilesForMovement.Clear();
+        IAInfo.posibleBestTilesForMovement = new List<OverlayTile>();
+
+        foreach (Transform tile in Map.transform)
+        {
+            tile.GetComponent<OverlayTile>().influence = 0;
+        }
         foreach (Transform tile in Map.transform)
         {
            if(tile.GetComponent<OverlayTile>().characterInTile != null)
@@ -225,17 +232,13 @@ public class TurnSistem : MonoBehaviour
                     List <OverlayTile> neighboursTiles = MapManager.Instance.GetNeighboursNodes(tile.GetComponent<OverlayTile>(), RangeFinder.GetTilesInRange(tile.GetComponent<OverlayTile>(), 1));
                     foreach (OverlayTile nTile in neighboursTiles)
                     {
-                        if (nTile.influence != 1 && nTile.influence != -1)
+                        if (nTile.characterInTile == null)
                         {
                             nTile.influence += 0.25f;
                             if (nTile.influence > 1)
                                 nTile.influence = 1;
-
-                            if (nTile.characterInTile == null)
-                            {
                                 IAInfo.posibleBestTilesForMovement.Add(nTile);
-                            }
-                           
+            
                         }
 
                     }
@@ -246,22 +249,21 @@ public class TurnSistem : MonoBehaviour
                     List<OverlayTile> neighboursTiles = MapManager.Instance.GetNeighboursNodes(tile.GetComponent<OverlayTile>(), RangeFinder.GetTilesInRange(tile.GetComponent<OverlayTile>(), 1));
                     foreach (OverlayTile nTile in neighboursTiles)
                     {
-                        if (nTile.influence != 1 && nTile.influence != -1)
+                        if (nTile.characterInTile == null)
                         {
                             nTile.influence -= 0.25f;
                             if (nTile.influence < -1)
                                 nTile.influence = -1;
-
-                            if (nTile.characterInTile == null)
-                            {
                                 IAInfo.posibleBestTilesForMovement.Add(nTile);
-                            }
+                            
                         }
 
                     }
                 }
             }
         }
+
+        tilesVacias = IAInfo.posibleBestTilesForMovement;
     }
 
     public void UpdateAmountOfInfluence()

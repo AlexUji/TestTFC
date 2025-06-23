@@ -416,20 +416,26 @@ public class IAEnemy : MonoBehaviour
 
         public override void Action()
         {
-            ts.UpdateInfluence();
+            movementRange = rangeFinder.GetTilesInRange(ts.IAInfo.selectedTroop.activeTile, ts.IAInfo.selectedTroop.movementRange);
             bestMovementTiles = ts.IAInfo.posibleBestTilesForMovement; //Obtenemos las tile vacias que tienen influencia
             float bestScore = 0;
-            
+           
 
             //Primero obtenemos la mejor tile a la que se podría ir en función del tipo de unidad
             if(ts.IAInfo.selectedTroop.type == UnitType.Attacker) // Si es de tipo atacante nos aproximamos a los enemigos
             {
                 foreach (OverlayTile tile in bestMovementTiles)
                 {
-                    if (tile.characterInTile == null && tile.influence > bestScore)
+                    int multy = 1;
+                    if (movementRange.Contains(tile))
                     {
-                        bestScore = tile.influence;
+                        multy = 5;
+                    }
+                    if ((tile.influence * multy) > bestScore)
+                    {
+                        bestScore = tile.influence * multy;
                         bestTile = tile;
+                        ts.BestTile = tile;
                     }
                 }
             }
@@ -437,10 +443,16 @@ public class IAEnemy : MonoBehaviour
             {
                 foreach (OverlayTile tile in bestMovementTiles)
                 {
-                    if (tile.characterInTile == null && tile.influence < bestScore)
+                    int multy = 1;
+                    if (movementRange.Contains(tile))
                     {
-                        bestScore = tile.influence;
+                        multy = 5;
+                    }
+                    if ((tile.influence * multy) < bestScore)
+                    {
+                        bestScore = tile.influence * multy;
                         bestTile = tile;
+                        ts.BestTile = tile;
                     }
                 }
             }
@@ -448,10 +460,11 @@ public class IAEnemy : MonoBehaviour
 
 
             // Comprobamos si esta dentro del rango de movimiento de nuestra unidad
-            movementRange = rangeFinder.GetTilesInRange(ts.IAInfo.selectedTroop.activeTile, ts.IAInfo.selectedTroop.movementRange);
+          
             
             if (movementRange.Contains(bestTile) ) //Si esta en el rango nos movemos directamente a esta
             {
+                Debug.Log("Mejor tile dentro del range");
                 path = pathFinder.FindPath(ts.IAInfo.selectedTroop.activeTile, bestTile, movementRange);
                 bestTile.characterInTile = ts.IAInfo.selectedTroop;
             }
@@ -512,7 +525,7 @@ public class IAEnemy : MonoBehaviour
             if (path.Count == 0)
             {
                 character.haveMoved = true;
-                ts.UpdateInfluence();
+               
 
             }
 
@@ -527,6 +540,7 @@ public class IAEnemy : MonoBehaviour
             character.haveAttacked = true;
             character.haveMoved = true;
             TurnSistem.Instance.EndAction(character);
+            TurnSistem.Instance.UpdateInfluence();
         }
     }
 
