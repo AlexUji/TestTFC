@@ -18,4 +18,24 @@ public class Ability : MonoBehaviour
         selfCharacter.currentMP -= manaCost;
         selfCharacter.haveAttacked = true;
     }
+
+    public virtual int SimulateAttack(CharacterInfo selfCharacter, CharacterInfo targetCharacter)
+    {
+        return 0;
+    }
+
+    public virtual int SimulateHeal(CharacterInfo selfCharacter, CharacterInfo targetCharacter)
+    {
+        return 0;
+    }
+
+    public virtual int SimulateDebuff(CharacterInfo selfCharacter, CharacterInfo targetCharacter)
+    {
+        return 0;
+    }
+
+    public virtual int SimulateBuff(CharacterInfo selfCharacter, CharacterInfo targetCharacter)
+    {
+        return 0;
+    }
 }

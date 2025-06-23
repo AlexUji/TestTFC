@@ -38,4 +38,13 @@ public class OverloadPunch : Ability
         }
 
     }
+
+    public override int SimulateAttack(CharacterInfo selfCharacter, CharacterInfo targetCharacter)
+    {
+        int targetLife = targetCharacter.currentHP;
+        return targetLife -= selfCharacter.attack * 3 - math.abs((int)targetCharacter.defense / 2);
+
+    }
+
+
 }

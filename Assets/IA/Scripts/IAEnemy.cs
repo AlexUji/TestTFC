@@ -30,7 +30,7 @@ public class IAEnemy : MonoBehaviour
 
     IANode n_root;
     TurnSistem turnSistem;
-    private float thinkTimer = 0f; // Temporizador
+    private float thinkTimer = 0; // Temporizador
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -43,7 +43,7 @@ public class IAEnemy : MonoBehaviour
 
     private void Update()
     {
-        /*if (!gm.yourTurn)
+        if (turnSistem.EnemyTurn)
         {
             thinkTimer += Time.deltaTime;
 
@@ -56,15 +56,15 @@ public class IAEnemy : MonoBehaviour
         else
         {
             thinkTimer = 0f;
-        }*/
+        }
     }
 
     void Think()
     {
-        /*if (!gm.yourTurn)
+        if (turnSistem.EnemyTurn)
         {
             n_root.Action();
-        }*/
+        }
     }
 
 
@@ -283,328 +283,110 @@ public class IAEnemy : MonoBehaviour
 
     class IAHability : IANode
     {
-        /*
-       private List<(int, int)> ObtenerPosicionesValidas(Troop tropa, BoardGrid tablero)
-       {
-           List<(int, int)> posibleDeploypos = new List<(int, int)>();
+        //CharacterInRange_plus_ability
+        TurnSistem ts = TurnSistem.Instance;
+        List<(CharacterInfo, Ability)> enemiesInRange = new List<(CharacterInfo, Ability)> ();
+        (CharacterInfo, Ability) finalAction;
+        CharacterInfo character;
 
-           //Si es una barril
-           if (tropa is Bomb)
-           {
-               for (int i = 0; i < tablero.rows; i++)
-               {
-                   for (int j = 0; j < tablero.columns; j++)
-                   {
-                       if (tablero.GetCell(i, j).GetColorTeam() == Team.Red || tablero.GetCell(i, j).GetColorTeam() == Team.None)
-                       {
-                           if (tablero.GetCell(i, j).transform.childCount == 0)
-                           {
-                               posibleDeploypos.Add((i, j));
-                           }
-                       }
+        public override void Action()
+        {
+            enemiesInRange = ts.IAInfo.CharacterInRange_plus_ability;
+            ts.UpdateAmountOfInfluence();
+            character = ts.IAInfo.selectedTroop;
 
-                   }
-               }
-           }
-           //El resto
-           else
-           {
-               for (int i = 0; i < tablero.rows; i++)
-               {
-                   for (int j = 0; j < tablero.columns; j++)
-                   {
-                       if (tablero.GetCell(i, j).GetColorTeam() == Team.Red && tablero.GetCell(i, j).transform.childCount == 0)
-                           posibleDeploypos.Add((i, j));
-                   }
-               }
-           }
-           return posibleDeploypos;
-       }
+            float previousAmountOfInfluence = ts.IAInfo.amountOfInfluence;
+            float simulatedAmountofInfluence = previousAmountOfInfluence;
+            float score = 0;
+           // int manaUsed = Int32.MaxValue;
 
-       private ((float, Troop), (int, int)) ObtenerPosicionPorInfluencia(Troop tropa, List<(int, int)> posicionesParaComp, BoardGrid tablero)
-       {
-           float influence = 0f;
-           float bestInfluence = -1f;
-           (int, int) bestPos = (-1, -1);
+            foreach ((CharacterInfo, Ability) action in enemiesInRange)
+            {
+                score = SimulateAbility(action.Item2, character, action.Item1);
+                simulatedAmountofInfluence -= score;
 
-           //Caballero
-           if (tropa == GameManager.Instance.enemyTroopPrefabs[0])
-           {
-               //Recorremos todas las pos validas
-               foreach ((int, int) pos in posicionesParaComp)
-               {
-                   //Comprobar si esta a mele
-                   for (int x = -1; x < 2; x++)
-                   {
-                       for (int y = -1; y < 2; y++)
-                       {
-                           if (pos.Item1 + x >= 0 && pos.Item1 + x < tablero.rows && pos.Item2 + y >= 0 && pos.Item2 + y < tablero.columns)
-                           {
-                               if (x == 0 && y == 0) continue;
+                if(simulatedAmountofInfluence < previousAmountOfInfluence)
+                {
+                    previousAmountOfInfluence = simulatedAmountofInfluence;
+                    finalAction = action;
+                }
+            }
 
-                               float t = tablero.GetCellInfluence(pos.Item1 + x, pos.Item2 + y);
-                               if (t >= 0) influence += t;
-                           }
-                       }
-                   }
+            finalAction.Item2.ApplyEffect(character,finalAction.Item1);
+        }
 
-                   influence /= 8f;
+        public int SimulateAbility(Ability ability, CharacterInfo self, CharacterInfo target)
+        {
+            int score = 0;
+            if (character.type == UnitType.Attacker) //Si es de tipo atacante se prioriza atacar a enemigos
+            {
+                switch (ability.type)
+                {
+                    case UnitType.Attacker:
+                         int life = ability.SimulateAttack(self, target);
+                        if(life <= 0)
+                            score = 100;
+                        break;
 
-                   if (influence > bestInfluence)
-                   {
-                       bestInfluence = influence;
-                       bestPos = pos;
-                   }
-               }
+                    case UnitType.Debuff:
+                        score = ability.SimulateDebuff(self, target);
+                        break;
+                    case UnitType.Support:
+                        int lifeH = ability.SimulateHeal(self, target);
+                        if ((lifeH * 100) / target.MaxHP >= 75)
+                        {
+                            score = 20;
+                        }
+                        else
+                        {
+                            score = 10;
+                        }
+                        break;
+                    case UnitType.Buff:
+                        score = ability.SimulateBuff(self, target);
+                        break;
 
-               Debug.Log("Caballero: " + bestInfluence);
+                }
+            }
+            else // Si es de tipo soporte se prioriza ayudar a aliados
+            {
+                switch (ability.type)
+                {
+                    case UnitType.Attacker:
+                        int life = ability.SimulateAttack(self, target);
+                        if (life <= 0)
+                            score = 100;
+                        break;
 
-           }
+                    case UnitType.Debuff:
+                        score = ability.SimulateDebuff(self, target);
+                        break;
+                    case UnitType.Support:
+                        int lifeH = ability.SimulateHeal(self, target);
+                        if ((lifeH * 100) / target.MaxHP >= 75)
+                        {
+                            score = 150;
+                        }
+                        else
+                        {
+                            score = 90;
+                        }
+                        break;
+                    case UnitType.Buff:
+                        score = ability.SimulateBuff(self, target);
+                        break;
 
-           //Arquero
-           if (tropa == GameManager.Instance.enemyTroopPrefabs[1])
-           {
-               //Recorremos todas las pos validas
-               foreach ((int, int) pos in posicionesParaComp)
-               {
-                   int closeEnemies = 0;
-                   //Comprobar si puede atacar enemigos
-                   for (int x = -2; x < 3; x++)
-                   {
-                       for (int y = -2; y < 3; y++)
-                       {
-                           if (pos.Item1 + x >= 0 && pos.Item1 + x < tablero.rows && pos.Item2 + y >= 0 && pos.Item2 + y < tablero.columns)
-                           {
-                               if (x <= 1 && x >= -1 && y <= 1 && y >= -1)
-                               {
-                                   if (tablero.GetCell(pos.Item1 + x, pos.Item2 + y).transform.childCount > 0)
-                                   {
-                                       closeEnemies++;
-                                   }
-                                   continue;
-                               }
+                }
+            }
 
-                               float t = tablero.GetCellInfluence(pos.Item1 + x, pos.Item2 + y);
-                               if (t >= 0) influence += t;
-                           }
-                       }
-
-                       influence = (influence - closeEnemies) / 12f;
-
-                       if (influence > bestInfluence)
-                       {
-                           bestInfluence = influence;
-                           bestPos = pos;
-                       }
-                   }
-               }
-               Debug.Log("Arquero: " + bestInfluence);
-           }
-           //Torre
-           //Solo si tenemos 2 o mas tropas
-           //Se tiene que colocar en zonas seguras
-           if (tropa is Tower && GameManager.Instance.enemyTroops.Count >= 2)
-           {
-               //Recorremos todas las pos validas
-               foreach ((int, int) pos in posicionesParaComp)
-               {
-                   //Comprobar si puede pintar o si tiene enemigos cerca
-                   for (int x = -2; x < 3; x++)
-                   {
-                       for (int y = -2; y < 3; y++)
-                       {
-                           if (pos.Item1 + x >= 0 && pos.Item1 + x < tablero.rows && pos.Item2 + y >= 0 && pos.Item2 + y < tablero.columns)
-                           {
-                               if (x == 0 && y == 0) continue;
-
-                               float t = tablero.GetCellInfluence(pos.Item1 + x, pos.Item2 + y);
-                               influence += t;
-                           }
-                       }
-                   }
-
-                   influence /= -16f;
-
-                   if (influence > bestInfluence)
-                   {
-                       bestInfluence = influence;
-                       bestPos = pos;
-                   }
-               }
-               Debug.Log("Torre: " + bestInfluence);
-           }
-
-           //Pawn solo si vamos mejor en casillas
-           if (tropa == GameManager.Instance.enemyTroopPrefabs[3] && GameManager.Instance.enemyTroops.Count >= 2)
-           {
-
-               //Recorremos todas las pos validas
-               foreach ((int, int) pos in posicionesParaComp)
-               {
-                   int closeEnemies = 0;
-                   //Comprobar si puede atacar enemigos
-                   for (int x = -3; x < 4; x++)
-                   {
-                       for (int y = -3; y < 4; y++)
-                       {
-                           if (pos.Item1 + x >= 0 && pos.Item1 + x < tablero.rows && pos.Item2 + y >= 0 && pos.Item2 + y < tablero.columns)
-                           {
-                               if (x <= 1 && x >= -1 && y <= 1 && y >= -1)
-                               {
-                                   if (tablero.GetCell(pos.Item1 + x, pos.Item2 + y).transform.childCount > 0)
-                                   {
-                                       closeEnemies++;
-                                   }
-                                   continue;
-                               }
-
-                               float t = tablero.GetCellInfluence(pos.Item1 + x, pos.Item2 + y);
-                               if (t >= 0) influence += t;
-                           }
-                       }
-
-                       influence = (influence - closeEnemies) / 16f;
-
-                       if (influence > bestInfluence)
-                       {
-                           bestInfluence = influence;
-                           bestPos = pos;
-                       }
-                   }
-               }
-               Debug.Log("Mago: " + bestInfluence);
-           }
-
-           //Barrel
-           //Tiene que usarse matando a la mayor cantidad de tropas posibles
-           //Hay que desplegarlo donde se tenga más influencia enemiga
-           //Solo lo usaremos si tenemos alguna tropa
-           if (tropa is Bomb && GameManager.Instance.enemyTroops.Count >= 1)
-           {
-
-               //Recorremos todas las pos validas
-               foreach ((int, int) pos in posicionesParaComp)
-               {
-                   //Comprobar si esta a mele
-                   for (int x = -1; x < 2; x++)
-                   {
-                       for (int y = -1; y < 2; y++)
-                       {
-                           if (pos.Item1 + x >= 0 && pos.Item1 + x < tablero.rows && pos.Item2 + y >= 0 && pos.Item2 + y < tablero.columns)
-                           {
-                               if (x == 0 && y == 0) continue;
-
-                               if (tablero.GetCell(pos.Item1 + x, pos.Item2 + y).transform.childCount > 0)
-                                   influence += 2.5f;
-                               if (tablero.GetCell(pos.Item1 + x, pos.Item2 + y).GetColorTeam() == Team.Blue)
-                                   influence += 1f;
-                               else if (tablero.GetCell(pos.Item1 + x, pos.Item2 + y).GetColorTeam() == Team.None)
-                                   influence += 0.5f;
-                           }
-                       }
-                   }
-
-                   influence /= 8f;
-
-                   if (influence > bestInfluence)
-                   {
-                       bestInfluence = influence;
-                       bestPos = pos;
-                   }
-               }
-               Debug.Log("Bomba: " + bestInfluence);
-           }
-           return ((bestInfluence, tropa), bestPos);
-       }
-
-       public (Troop, (int, int)) ObtenerMejorJugada()
-       {
-           Troop tropaSeleccionada = null;
-
-           List<(int, int)> posibleDeploypos = new List<(int, int)>();
-           (int, int) deployPos = (0, 0);
-           List<((float, Troop), (int, int))> List_score_pos = new List<((float, Troop), (int, int))>();
-           float previousBestPlay = 0;
-
-
-           for (int i = 0; i < GameManager.Instance.enemyTroopPrefabs.Count; i++)
-           {
-               //Si tenemos suficiente dinero para comprar la tropa simulamos la mejor jugada
-               if (GameManager.Instance.GetCoins(Team.Red) >= GameManager.Instance.enemyTroopPrefabs[i].cost)
-               {
-                   //Funciona
-                   posibleDeploypos = ObtenerPosicionesValidas(GameManager.Instance.enemyTroopPrefabs[i], GameManager.Instance.board);
-
-                   ((float, Troop), (int, int)) bestDeploypos = ObtenerPosicionPorInfluencia(GameManager.Instance.enemyTroopPrefabs[i], posibleDeploypos, GameManager.Instance.board);
-
-                   //Guardamos la jugada
-                   List_score_pos.Add(bestDeploypos);
-               }
-
-           }
-
-           previousBestPlay = List_score_pos[0].Item1.Item1;
-           tropaSeleccionada = List_score_pos[0].Item1.Item2;
-           deployPos = List_score_pos[0].Item2;
-           foreach (((float, Troop), (int, int)) jugada in List_score_pos)
-           {
-               //Debug.Log("Tropa en el array "+jugada.Item1.Item2);
-               if (jugada.Item1.Item1 > previousBestPlay)
-               {
-                   Debug.Log("Tropa seleccionada " + jugada.Item1.Item2);
-                   previousBestPlay = jugada.Item1.Item1;
-                   tropaSeleccionada = jugada.Item1.Item2;
-                   deployPos = jugada.Item2;
-               }
-           }
-
-           // Si previousBestPlay sigue siendo 0, selecciona una tropa y posición aleatorias
-           if (previousBestPlay == 0)
-           {
-               // Filtrar tropas disponibles según el coste
-               List<Troop> tropasDisponibles = GameManager.Instance.enemyTroopPrefabs
-                   .Where(t => GameManager.Instance.GetCoins(Team.Red) >= t.cost)
-                   .ToList();
-
-               if (tropasDisponibles.Count > 0)
-               {
-                   // Seleccionar tropa aleatoria
-                   tropaSeleccionada = tropasDisponibles[UnityEngine.Random.Range(0, tropasDisponibles.Count)];
-
-                   // Obtener posiciones válidas para esa tropa
-                   posibleDeploypos = ObtenerPosicionesValidas(tropaSeleccionada, GameManager.Instance.board);
-
-                   // Seleccionar posición aleatoria
-                   if (posibleDeploypos.Count > 0)
-                   {
-                       deployPos = posibleDeploypos[UnityEngine.Random.Range(0, posibleDeploypos.Count)];
-                   }
-               }
-           }
-
-           return (tropaSeleccionada, deployPos);
-       }
-
-       public override void Action()
-       {
-           Debug.Log("Desplegar");
-
-           (Troop, (int, int)) jugada = ObtenerMejorJugada();
-
-           if (jugada.Item2.Item1 > -1)
-           {
-               GameManager.Instance.board.SpawnTroop(jugada.Item1, GameManager.Instance.board.GetCell(jugada.Item2.Item1, jugada.Item2.Item2));
-               GameManager.Instance.SpendCoins(jugada.Item1.cost, Team.Red);
-           }
-       }
-       */
+            return score;
+        }
     }
 
     class IAMove : IANode
     {
         TurnSistem ts = TurnSistem.Instance; 
         RangeFinder rangeFinder = new RangeFinder();
-        CharacterInfo slectedEnemy = null;
         List<OverlayTile> bestMovementTiles;
         List<OverlayTile> movementRange;
         List<OverlayTile> path;
@@ -618,8 +400,8 @@ public class IAEnemy : MonoBehaviour
             float bestScore = 0;
             
 
-            //Primero obtenemos la mejor tile a la que se podría ir
-            if(ts.IAInfo.selectedTroop.type == UnitType.Attacker)
+            //Primero obtenemos la mejor tile a la que se podría ir en función del tipo de unidad
+            if(ts.IAInfo.selectedTroop.type == UnitType.Attacker) // Si es de tipo atacante nos aproximamos a los enemigos
             {
                 foreach (OverlayTile tile in bestMovementTiles)
                 {
@@ -630,7 +412,7 @@ public class IAEnemy : MonoBehaviour
                     }
                 }
             }
-            else
+            else //Si es de tipo soporte nos acercamos a nuestros aliadados
             {
                 foreach (OverlayTile tile in bestMovementTiles)
                 {
@@ -661,11 +443,12 @@ public class IAEnemy : MonoBehaviour
                         finalTile = tile;
                     }
                 }
-                //Hacemos movimiento a la tile más cercana
+                //Nos guardamos el path con la tile más cernaca a la deseada
                 path = pathFinder.FindPath(ts.IAInfo.selectedTroop.activeTile, finalTile, movementRange);
 
             }
 
+            //Hacemos el path hasta el final
             while (path.Count > 0)
             {
                 MoveCharacterAlongPath();
@@ -711,8 +494,10 @@ public class IAEnemy : MonoBehaviour
     {
         public override void Action()
         {
-            /* Debug.Log("Pasar turno");
-             GameManager.Instance.SkipTurn();*/
+            CharacterInfo character = TurnSistem.Instance.IAInfo.selectedTroop;
+            character.haveAttacked = true;
+            character.haveMoved = true;
+            TurnSistem.Instance.EndAction(character);
         }
     }
 

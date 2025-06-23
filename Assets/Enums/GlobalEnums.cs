@@ -9,7 +9,9 @@ public enum UnitType
 {
     Attacker,
     Support,
-    move
+    Buff,
+    Debuff,
+    move,
 }
 public enum Team
 {

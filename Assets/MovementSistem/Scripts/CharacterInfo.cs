@@ -47,6 +47,7 @@ public class CharacterInfo : MonoBehaviour
             //Animación muerte
             EnemySlayed(enemy);
         }
+        haveAttacked = true;
     }
 
     public void IAbasicAttack(CharacterInfo enemy)
@@ -57,6 +58,7 @@ public class CharacterInfo : MonoBehaviour
             //Animación muerte
             IAEnemySlayed(enemy);
         }
+        haveAttacked = true;
     }
 
     public void EnemySlayed(CharacterInfo enemy)

@@ -79,6 +79,7 @@ public class TurnSistem : MonoBehaviour
                 {
                     AllyTurn = true;
                     EnemyTurn = false;
+                    idTroop = 0;
                     foreach (Transform c in EnemyTeam.transform)
                     {
                         c.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1);
@@ -87,6 +88,10 @@ public class TurnSistem : MonoBehaviour
                     }
                     Debug.Log("Tu turno");
                     EnemyActionsPerTurn = EnemyTeam.transform.childCount;
+                }
+                else
+                {
+                    SelectTroop();
                 }
             }
 
