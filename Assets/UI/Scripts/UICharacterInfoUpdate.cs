@@ -35,6 +35,6 @@ public class UICharacterInfoUpdate : MonoBehaviour
         float percentageMana = (float)targetedCharacter.currentMP / (float)targetedCharacter.MaxMP;
         visulaMana.GetComponent<Image>().fillAmount = percentageMana;
 
-        Debug.Log("Mana " + percentageMana + ", Vida " + percentageLife);
+        //Debug.Log("Mana " + percentageMana + ", Vida " + percentageLife);
     }
 }

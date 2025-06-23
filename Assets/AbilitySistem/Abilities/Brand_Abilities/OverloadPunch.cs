@@ -27,7 +27,7 @@ public class OverloadPunch : Ability
         {
             
             targetCharacter.currentHP -= selfCharacter.attack*3 - math.abs((int)targetCharacter.defense / 2);
-            if(targetCharacter.currentHP <= 0) { }
+            if(targetCharacter.currentHP <= 0) 
                 selfCharacter.EnemySlayed(targetCharacter);
             base.ApplyEffect(selfCharacter, targetCharacter);
             Debug.Log("Se ha ejecutado");

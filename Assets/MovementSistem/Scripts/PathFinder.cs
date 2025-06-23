@@ -68,6 +68,9 @@ public class PathFinder
 
     private int GetManhattanDistance(OverlayTile starNode, OverlayTile neighbourNode)
     {
+       /* Debug.Log("Start node "+starNode.name);
+        Debug.Log("Neighbour node "+neighbourNode.name);*/
+
         return Math.Abs(starNode.gridPosition.x - neighbourNode.gridPosition.x) + Math.Abs(starNode.gridPosition.y - neighbourNode.gridPosition.y);
     }
 

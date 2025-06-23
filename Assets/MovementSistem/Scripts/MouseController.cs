@@ -129,7 +129,7 @@ public class MouseController : MonoBehaviour
                         //Si hay character focus y se ha clicado a mover
                         else if (moveAction && inRangeTiles.Contains(overlayTile.GetComponent<OverlayTile>()) && overlayTile.GetComponent<OverlayTile>().characterInTile == null)
                         {
-                            TurnSistem.Instance.UpdateInfluence();//Actualiza la influencia al moverse
+                          
                             transform.position = overlayTile.transform.position;
                             gameObject.GetComponent<SpriteRenderer>().sortingOrder = 50;
 
@@ -207,7 +207,7 @@ public class MouseController : MonoBehaviour
 
     public void PositionOnTile(OverlayTile tile)
     {
-        Debug.Log("Pos x: "+tile.transform.position.x + ", Pos y: " + tile.transform.position.y + ", Pos z: " + tile.transform.position.z);
+        //Debug.Log("Pos x: "+tile.transform.position.x + ", Pos y: " + tile.transform.position.y + ", Pos z: " + tile.transform.position.z);
         character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, tile.transform.position.z);
         //character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
         character.activeTile = tile;
@@ -230,6 +230,7 @@ public class MouseController : MonoBehaviour
         if (path.Count == 0)
         {
             character.haveMoved = true;
+            TurnSistem.Instance.UpdateInfluence();
 
             if (character.haveAttacked)
             {

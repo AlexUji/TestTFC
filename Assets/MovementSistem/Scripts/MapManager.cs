@@ -67,11 +67,9 @@ public class MapManager : MonoBehaviour
         spawnSystem.SpawnAllies(map);
         spawnSystem.SpawnEnemys(map);
         TurnSistem.Instance.InitialzeTeams();
-        foreach (var tile in map)
-        {
-            Debug.Log(tile.Value.influence);
-        }
-
+        TurnSistem.Instance.InitialiceIAInfo();
+        //TurnSistem.Instance.SelectTroop();
+        
     }
 
     public List<OverlayTile> GetNeighboursNodes(OverlayTile currentNode, List<OverlayTile> tilesInRange)

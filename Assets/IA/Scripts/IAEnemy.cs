@@ -5,7 +5,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
@@ -17,9 +19,7 @@ public struct IAInfo
     public GameObject enemyTeam;
     public GameObject allyTeam;
     public CharacterInfo selectedTroop;
-    public CharacterInfo selectedEnemyTroop;
     public List<CharacterInfo> enemiesInRange;
-    public List<CharacterInfo> alliesInRange;
     public List<(CharacterInfo,Ability)> CharacterInRange_plus_ability;
     public List<OverlayTile> posibleBestTilesForMovement;
     public float amountOfInfluence;
@@ -47,7 +47,7 @@ public class IAEnemy : MonoBehaviour
         {
             thinkTimer += Time.deltaTime;
 
-            if (thinkTimer >= 1.5f)
+            if (thinkTimer >= 0.5f)
             {
                 Think(); // Llamar a la función Think
                 thinkTimer = 0f; // Reiniciar el temporizador
@@ -93,8 +93,8 @@ public class IAEnemy : MonoBehaviour
 
         // Seleccionamos a la primera unidad a evaluar
 
-        turnSistem.InitialiceIAInfo();
-        turnSistem.SelectTroop();
+        //turnSistem.InitialiceIAInfo();
+        //turnSistem.SelectTroop();
     }
 
     // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -107,6 +107,7 @@ public class IAEnemy : MonoBehaviour
 
         public override void Action()
         {
+            
             if (TurnSistem.Instance.IAInfo.selectedTroop.haveActions)
             {
                 n_true.Action();
@@ -161,6 +162,8 @@ public class IAEnemy : MonoBehaviour
             RangeFinder rangeFinder = new RangeFinder();
             TurnSistem ts = TurnSistem.Instance;
             List<OverlayTile> tilesInrange;
+            ts.IAInfo.CharacterInRange_plus_ability.Clear();
+
 
             foreach (Ability ability in ts.IAInfo.selectedTroop.habilities)
             {
@@ -184,10 +187,12 @@ public class IAEnemy : MonoBehaviour
 
             if (ts.IAInfo.CharacterInRange_plus_ability.Count > 0)
             {
+
                 n_true.Action();
             }
             else
             {
+                Debug.Log("No está a rango de habilidades");
                 n_false.Action();
             }
         }
@@ -203,6 +208,7 @@ public class IAEnemy : MonoBehaviour
             RangeFinder rangeFinder = new RangeFinder();
             TurnSistem ts = TurnSistem.Instance;
             List<OverlayTile> tilesInrange = rangeFinder.GetTilesInRange(ts.IAInfo.selectedTroop.activeTile, ts.IAInfo.selectedTroop.atackRange);
+            ts.IAInfo.enemiesInRange.Clear();
 
             foreach (OverlayTile tile in tilesInrange)
             {
@@ -277,7 +283,8 @@ public class IAEnemy : MonoBehaviour
 
             //Realiza la mejor acción y actualiza la influencia si es necesario
             ts.IAInfo.selectedTroop.IAbasicAttack(slectedEnemy);
-            
+            Debug.Log("Ataque basico");
+
         }
     }
 
@@ -286,7 +293,7 @@ public class IAEnemy : MonoBehaviour
         //CharacterInRange_plus_ability
         TurnSistem ts = TurnSistem.Instance;
         List<(CharacterInfo, Ability)> enemiesInRange = new List<(CharacterInfo, Ability)> ();
-        (CharacterInfo, Ability) finalAction;
+        (CharacterInfo, Ability) finalAction = (null,null);
         CharacterInfo character;
 
         public override void Action()
@@ -302,7 +309,9 @@ public class IAEnemy : MonoBehaviour
 
             foreach ((CharacterInfo, Ability) action in enemiesInRange)
             {
+                
                 score = SimulateAbility(action.Item2, character, action.Item1);
+                Debug.Log("Score "+score);
                 simulatedAmountofInfluence -= score;
 
                 if(simulatedAmountofInfluence < previousAmountOfInfluence)
@@ -312,20 +321,28 @@ public class IAEnemy : MonoBehaviour
                 }
             }
 
+           
             finalAction.Item2.ApplyEffect(character,finalAction.Item1);
+            Debug.Log(finalAction.Item2.abilityInfoText);
         }
 
         public int SimulateAbility(Ability ability, CharacterInfo self, CharacterInfo target)
         {
             int score = 0;
-            if (character.type == UnitType.Attacker) //Si es de tipo atacante se prioriza atacar a enemigos
+            if (self.type == UnitType.Attacker) //Si es de tipo atacante se prioriza atacar a enemigos
             {
+                Debug.Log("Atacante");
                 switch (ability.type)
                 {
                     case UnitType.Attacker:
-                         int life = ability.SimulateAttack(self, target);
-                        if(life <= 0)
+                        
+                        int life = ability.SimulateAttack(self, target);
+                        life = target.currentHP - life;
+                        Debug.Log("Vida quitada" + life);
+                        if (life <= 0)
                             score = 100;
+                        else
+                            score = 50;
                         break;
 
                     case UnitType.Debuff:
@@ -354,8 +371,11 @@ public class IAEnemy : MonoBehaviour
                 {
                     case UnitType.Attacker:
                         int life = ability.SimulateAttack(self, target);
+                        life = target.currentHP - life;
                         if (life <= 0)
                             score = 100;
+                        else
+                            score = 50;
                         break;
 
                     case UnitType.Debuff:
@@ -396,6 +416,7 @@ public class IAEnemy : MonoBehaviour
 
         public override void Action()
         {
+            ts.UpdateInfluence();
             bestMovementTiles = ts.IAInfo.posibleBestTilesForMovement; //Obtenemos las tile vacias que tienen influencia
             float bestScore = 0;
             
@@ -405,7 +426,7 @@ public class IAEnemy : MonoBehaviour
             {
                 foreach (OverlayTile tile in bestMovementTiles)
                 {
-                    if (tile.influence > bestScore)
+                    if (tile.characterInTile == null && tile.influence > bestScore)
                     {
                         bestScore = tile.influence;
                         bestTile = tile;
@@ -416,38 +437,46 @@ public class IAEnemy : MonoBehaviour
             {
                 foreach (OverlayTile tile in bestMovementTiles)
                 {
-                    if (tile.influence < bestScore)
+                    if (tile.characterInTile == null && tile.influence < bestScore)
                     {
                         bestScore = tile.influence;
                         bestTile = tile;
                     }
                 }
             }
+           
+
 
             // Comprobamos si esta dentro del rango de movimiento de nuestra unidad
             movementRange = rangeFinder.GetTilesInRange(ts.IAInfo.selectedTroop.activeTile, ts.IAInfo.selectedTroop.movementRange);
             
-            if (movementRange.Contains(bestTile)) //Si esta en el rango nos movemos directamente a esta
+            if (movementRange.Contains(bestTile) ) //Si esta en el rango nos movemos directamente a esta
             {
                 path = pathFinder.FindPath(ts.IAInfo.selectedTroop.activeTile, bestTile, movementRange);
+                bestTile.characterInTile = ts.IAInfo.selectedTroop;
             }
             else //Si no esta obtenemos el tile dentro de nuestro rango que este más cerca
             {
                 int distance = Int32.MaxValue;
                 foreach (OverlayTile tile in movementRange)
                 {
-                    path = pathFinder.FindPath(tile, bestTile, ts.MapinTiles);
-                    if (path.Count < distance) //Está a una distancia menor de la tile deseada
+                    if (tile.characterInTile == null)
                     {
-                        distance = path.Count;
-                        finalTile = tile;
+                        path = pathFinder.FindPath(tile, bestTile, ts.MapinTiles);
+                        if (path.Count < distance) //Está a una distancia menor de la tile deseada
+                        {
+                            distance = path.Count;
+                            finalTile = tile;
+                        }
                     }
                 }
                 //Nos guardamos el path con la tile más cernaca a la deseada
                 path = pathFinder.FindPath(ts.IAInfo.selectedTroop.activeTile, finalTile, movementRange);
-
+                finalTile.characterInTile = ts.IAInfo.selectedTroop;
             }
 
+            ts.IAInfo.selectedTroop.activeTile.characterInTile = null;
+          
             //Hacemos el path hasta el final
             while (path.Count > 0)
             {
@@ -459,7 +488,7 @@ public class IAEnemy : MonoBehaviour
 
         public void PositionOnTile(OverlayTile tile)
         {
-            Debug.Log("Pos x: " + tile.transform.position.x + ", Pos y: " + tile.transform.position.y + ", Pos z: " + tile.transform.position.z);
+            //Debug.Log("Pos x: " + tile.transform.position.x + ", Pos y: " + tile.transform.position.y + ", Pos z: " + tile.transform.position.z);
             ts.IAInfo.selectedTroop.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, tile.transform.position.z);
             //character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
             ts.IAInfo.selectedTroop.activeTile = tile;

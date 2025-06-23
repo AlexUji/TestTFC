@@ -13,7 +13,7 @@ public class OverlayTile : MonoBehaviour
     public bool isBlocked;
     public OverlayTile previusTile;
     public Vector3Int gridPosition;
-    public float influence;
+    public float influence = 0;
     public Vector2Int grid2DPosition { get {return new Vector2Int(gridPosition.x, gridPosition.y); } }
 
     public List<Sprite> arrows;
