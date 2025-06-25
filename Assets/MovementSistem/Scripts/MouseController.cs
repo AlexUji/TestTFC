@@ -117,13 +117,24 @@ public class MouseController : MonoBehaviour
                         //Si no hay character focus
                         if (character == null && overlayTile.GetComponent<OverlayTile>().characterInTile != null && overlayTile.GetComponent<OverlayTile>().characterInTile.haveActions)
                         {
-                            isFreeFocus = false;
-                            character = overlayTile.GetComponent<OverlayTile>().characterInTile;
-                            character.isFocused = true;
-                            character.menu.SetActive(true);
-                            CanvasInstance.Instance.characterInfoBox.SetActive(true);
-                            CanvasInstance.Instance.characterInfoBox.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
-                            CanvasInstance.Instance.btnQuit.SetActive(true);
+                            if (overlayTile.GetComponent<OverlayTile>().characterInTile.team == Team.Ally)
+                            {
+                                isFreeFocus = false;
+                                character = overlayTile.GetComponent<OverlayTile>().characterInTile;
+                                character.isFocused = true;
+                                character.menu.SetActive(true);
+                                CanvasInstance.Instance.characterInfoBox.SetActive(true);
+                                CanvasInstance.Instance.characterInfoBox.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
+                                CanvasInstance.Instance.btnQuit.SetActive(true);
+                            }
+                            else
+                            {
+                                CanvasInstance.Instance.characterInfoBox.SetActive(true);
+                                CanvasInstance.Instance.characterInfoBox.GetComponent<UICharacterInfoUpdate>().UpdateUI(overlayTile.GetComponent<OverlayTile>().characterInTile);
+                                CanvasInstance.Instance.btnQuit.SetActive(true);
+                            }
+                            
+                           
 
                         }
                         //Si hay character focus y se ha clicado a mover
@@ -133,7 +144,9 @@ public class MouseController : MonoBehaviour
                             transform.position = overlayTile.transform.position;
                             gameObject.GetComponent<SpriteRenderer>().sortingOrder = 50;
 
+                            character.activeTile.isBlocked = false;
                             character.activeTile.characterInTile = null;
+                           
                             overlayTile.GetComponent<OverlayTile>().characterInTile = character;
                             foreach (var tile in inRangeTiles)
                             {
@@ -230,6 +243,7 @@ public class MouseController : MonoBehaviour
         if (path.Count == 0)
         {
             character.haveMoved = true;
+            character.activeTile.isBlocked = true;
             TurnSistem.Instance.UpdateInfluence();
 
             if (character.haveAttacked)

@@ -23,6 +23,9 @@ public struct IAInfo
     public List<(CharacterInfo,Ability)> CharacterInRange_plus_ability;
     public List<OverlayTile> posibleBestTilesForMovement;
     public float amountOfInfluence;
+    public int indexPath;
+    public List<OverlayTile> finalPath;
+    public bool isMoving;
 }
 
 public class IAEnemy : MonoBehaviour
@@ -31,6 +34,7 @@ public class IAEnemy : MonoBehaviour
     IANode n_root;
     TurnSistem turnSistem;
     private float thinkTimer = 0; // Temporizador
+    private float velocity = 0.5f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -45,9 +49,17 @@ public class IAEnemy : MonoBehaviour
     {
         if (turnSistem.EnemyTurn)
         {
-            thinkTimer += Time.deltaTime;
 
-            if (thinkTimer >= 0.5f)
+            if (turnSistem.IAInfo.isMoving)
+            {
+                velocity = 0.001f;
+            }
+            else{
+                velocity = 0.5f;
+            }
+            thinkTimer += Time.deltaTime;
+            
+            if (thinkTimer >= velocity)
             {
                 Think(); // Llamar a la función Think
                 thinkTimer = 0f; // Reiniciar el temporizador
@@ -149,6 +161,7 @@ public class IAEnemy : MonoBehaviour
             else
             {
                 n_false.Action();
+                
             }
         }
     }
@@ -192,7 +205,7 @@ public class IAEnemy : MonoBehaviour
             }
             else
             {
-                Debug.Log("No está a rango de habilidades");
+                //Debug.Log("No está a rango de habilidades");
                 n_false.Action();
             }
         }
@@ -218,11 +231,14 @@ public class IAEnemy : MonoBehaviour
 
             if(ts.IAInfo.enemiesInRange.Count > 0)
             {
+                Debug.Log("Si esta a rango de basic");
                 n_true.Action();
             }
             else
             {
+                Debug.Log("No esta a rango de basic");
                 n_false.Action();
+                
             }
         }
 
@@ -414,122 +430,186 @@ public class IAEnemy : MonoBehaviour
         OverlayTile finalTile = null;
         PathFinder pathFinder = new PathFinder();
 
+        float tiempoDeEspera = 3f;
+        float tiempoTranscurrido = 0f;
+        bool accionEjecutada = false;
+
+
         public override void Action()
         {
-            movementRange = rangeFinder.GetTilesInRange(ts.IAInfo.selectedTroop.activeTile, ts.IAInfo.selectedTroop.movementRange);
-            bestMovementTiles = ts.IAInfo.posibleBestTilesForMovement; //Obtenemos las tile vacias que tienen influencia
-            float bestScore = 0;
-           
-
-            //Primero obtenemos la mejor tile a la que se podría ir en función del tipo de unidad
-            if(ts.IAInfo.selectedTroop.type == UnitType.Attacker) // Si es de tipo atacante nos aproximamos a los enemigos
+            if (!ts.IAInfo.isMoving)
             {
-                foreach (OverlayTile tile in bestMovementTiles)
-                {
-                    int multy = 1;
-                    if (movementRange.Contains(tile))
-                    {
-                        multy = 5;
-                    }
-                    if ((tile.influence * multy) > bestScore)
-                    {
-                        bestScore = tile.influence * multy;
-                        bestTile = tile;
-                        ts.BestTile = tile;
-                    }
-                }
-            }
-            else //Si es de tipo soporte nos acercamos a nuestros aliadados
-            {
-                foreach (OverlayTile tile in bestMovementTiles)
-                {
-                    int multy = 1;
-                    if (movementRange.Contains(tile))
-                    {
-                        multy = 5;
-                    }
-                    if ((tile.influence * multy) < bestScore)
-                    {
-                        bestScore = tile.influence * multy;
-                        bestTile = tile;
-                        ts.BestTile = tile;
-                    }
-                }
-            }
-           
+                Debug.Log("No se ha movido");
+                movementRange = rangeFinder.GetTilesInRange(ts.IAInfo.selectedTroop.activeTile, ts.IAInfo.selectedTroop.movementRange);
+                bestMovementTiles = ts.IAInfo.posibleBestTilesForMovement; //Obtenemos las tile vacias que tienen influencia
+                float bestScore = 0;
 
 
-            // Comprobamos si esta dentro del rango de movimiento de nuestra unidad
-          
-            
-            if (movementRange.Contains(bestTile) ) //Si esta en el rango nos movemos directamente a esta
-            {
-                Debug.Log("Mejor tile dentro del range");
-                path = pathFinder.FindPath(ts.IAInfo.selectedTroop.activeTile, bestTile, movementRange);
-                bestTile.characterInTile = ts.IAInfo.selectedTroop;
-            }
-            else //Si no esta obtenemos el tile dentro de nuestro rango que este más cerca
-            {
-                int distance = Int32.MaxValue;
-                foreach (OverlayTile tile in movementRange)
+                //Primero obtenemos la mejor tile a la que se podría ir en función del tipo de unidad
+                if (ts.IAInfo.selectedTroop.type == UnitType.Attacker) // Si es de tipo atacante nos aproximamos a los enemigos
                 {
-                    if (tile.characterInTile == null)
+                    foreach (OverlayTile tile in bestMovementTiles)
                     {
-                        path = pathFinder.FindPath(tile, bestTile, ts.MapinTiles);
-                        if (path.Count < distance) //Está a una distancia menor de la tile deseada
+                        int multy = 1;
+                        if (!tile.isBlocked)
                         {
-                            distance = path.Count;
-                            finalTile = tile;
+                            List<OverlayTile> range1 = rangeFinder.GetTilesInRange(tile, 1);
+                            foreach (OverlayTile tileInFront in range1)
+                            {
+                                if (tileInFront.characterInTile != null && tileInFront.characterInTile.team == Team.Ally)
+                                    multy += 100;
+
+                            }
+
+                            if (!tile.isBlocked && movementRange.Contains(tile))
+                            {
+                                multy += 5;
+                            }
+                            if (!tile.isBlocked && (tile.influence * multy) > bestScore)
+                            {
+                                bestScore = tile.influence * multy;
+                                bestTile = tile;
+                                ts.BestTile = tile;
+                            }
+
                         }
                     }
                 }
-                //Nos guardamos el path con la tile más cernaca a la deseada
-                path = pathFinder.FindPath(ts.IAInfo.selectedTroop.activeTile, finalTile, movementRange);
-                finalTile.characterInTile = ts.IAInfo.selectedTroop;
-            }
+                else //Si es de tipo soporte nos acercamos a nuestros aliadados
+                {
+                    foreach (OverlayTile tile in bestMovementTiles)
+                    {
+                        int multy = 1;
+                        if (!tile.isBlocked && movementRange.Contains(tile))
+                        {
+                            multy = 5;
+                        }
+                        if (!tile.isBlocked && (tile.influence * multy) < bestScore)
+                        {
+                            bestScore = tile.influence * multy;
+                            bestTile = tile;
+                            ts.BestTile = tile;
+                        }
+                    }
+                }
 
-            ts.IAInfo.selectedTroop.activeTile.characterInTile = null;
-          
-            //Hacemos el path hasta el final
-            while (path.Count > 0)
-            {
-                MoveCharacterAlongPath();
+
+
+                // Comprobamos si esta dentro del rango de movimiento de nuestra unidad
+
+                path = pathFinder.FindPath(ts.IAInfo.selectedTroop.activeTile, bestTile, movementRange);
+
+                if (path.Contains(bestTile)) //Si esta en el rango nos movemos directamente a esta
+                {
+                    Debug.Log("Mejor tile dentro del path");
+
+                    bestTile.characterInTile = ts.IAInfo.selectedTroop;
+                    finalTile = bestTile;
+                }
+                else //Si no esta obtenemos el tile dentro de nuestro rango que este más cerca
+                {
+                    int distance = Int32.MaxValue;
+                    foreach (OverlayTile tile in movementRange)
+                    {
+                        if (!tile.isBlocked)
+                        {
+                            path = pathFinder.FindPath(tile, bestTile, ts.MapinTiles);
+                            if (path.Count < distance) //Está a una distancia menor de la tile deseada
+                            {
+                                distance = path.Count;
+                                finalTile = tile;
+                                ts.BestTile = tile;
+                            }
+                        }
+                    }
+                    //Nos guardamos el path con la tile más cernaca a la deseada
+                    path = pathFinder.FindPath(ts.IAInfo.selectedTroop.activeTile, finalTile, movementRange);
+                    finalTile.characterInTile = ts.IAInfo.selectedTroop;
+                }
+
+                ts.IAInfo.selectedTroop.activeTile.characterInTile = null;
+                ts.IAInfo.selectedTroop.activeTile.isBlocked = false;
+
+                Debug.Log("PATH" + path.Count);
+                //Hacemos el path hasta el final
+                ts.IAInfo.finalPath = path;
+                ts.IAInfo.isMoving = true;
             }
+            else
+            {
+                Debug.Log("Se está moviendo");
+                path = ts.IAInfo.finalPath;
+                Debug.Log("FINAL PATH" + path.Count);
+
+                if (path.Count <= 0)
+                {
+                    ts.IAInfo.selectedTroop.haveMoved = true;
+                }
+                else
+                {
+
+                    if (path.Count > 0)
+                    {
+                        List<OverlayTile> miniPath = new List<OverlayTile>();
+
+                        miniPath.Add(path[0]);
+
+                        if (path.Count >= 2)
+                        {
+                            miniPath.Add(path[1]);
+
+                        }
+
+
+                        MoveCharacterAlongPath(miniPath, ts.IAInfo.indexPath);
+                           
+                        
+
+                    }
+                }
+                ts.IAInfo.finalPath = path;
+            }
+           
+          
 
         }
 
 
-        public void PositionOnTile(OverlayTile tile)
+        public void PositionOnTile(OverlayTile tile )
         {
-            //Debug.Log("Pos x: " + tile.transform.position.x + ", Pos y: " + tile.transform.position.y + ", Pos z: " + tile.transform.position.z);
+            
             ts.IAInfo.selectedTroop.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, tile.transform.position.z);
-            //character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
             ts.IAInfo.selectedTroop.activeTile = tile;
         }
-        private void MoveCharacterAlongPath()
+        private void MoveCharacterAlongPath(List<OverlayTile> minipath, int index)
         {
-
-            var steep = 5 * Time.deltaTime;
+            Debug.Log("Minipath");
+            var steep = 10 * Time.deltaTime;
             CharacterInfo character = ts.IAInfo.selectedTroop;
 
-            var zIndex = path[0].transform.position.z;
-            character.transform.position = Vector2.MoveTowards(character.transform.position, path[0].transform.position, steep);
+            var zIndex = minipath[0].transform.position.z;
+            character.transform.position = Vector2.MoveTowards(character.transform.position, minipath[0].transform.position, steep);
             character.transform.position = new Vector3(character.transform.position.x, character.transform.position.y, zIndex);
 
-            if (Vector2.Distance(character.transform.position, path[0].transform.position) < 0.0001f)
+            if (Vector2.Distance(character.transform.position, minipath[0].transform.position) < 0.0001f)
             {
-                PositionOnTile(path[0]);
-                path.RemoveAt(0);
+                PositionOnTile(minipath[0]);
+                path.RemoveAt(index);
+                
             }
 
             if (path.Count == 0)
             {
+                finalTile.isBlocked = true;
                 character.haveMoved = true;
+                ts.IAInfo.isMoving = false;
                
 
             }
 
         }
+
+        
     }
 
     class IASkipTurn : IANode
@@ -544,5 +624,5 @@ public class IAEnemy : MonoBehaviour
         }
     }
 
-
+    
 }

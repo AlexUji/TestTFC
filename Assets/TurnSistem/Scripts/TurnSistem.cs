@@ -16,10 +16,13 @@ public class TurnSistem : MonoBehaviour
     public bool EnemyTurn = false;
     public int AllyActionsPerTurn = 0;
     public List<OverlayTile> tilesVacias = new List<OverlayTile>();
+    public CharacterInfo tropaseleccionada;
     public OverlayTile BestTile;
     public int EnemyActionsPerTurn = 0;
     private int idTroop = 0;
     public IAInfo IAInfo;
+
+   
 
 
 
@@ -31,6 +34,8 @@ public class TurnSistem : MonoBehaviour
     {
         RangeFinder = new RangeFinder();
     }
+
+
     public void ResetTeams()
     {
         foreach (GameObject character in AllyTeam.transform)
@@ -75,7 +80,7 @@ public class TurnSistem : MonoBehaviour
                     InitialzeTeams();
                     UpdateInfluence();
                     
-                    Debug.Log("Turno enemigo");
+                    //Debug.Log("Turno enemigo");
 
                     AllyTurn = false;
                     EnemyTurn = true;
@@ -93,9 +98,7 @@ public class TurnSistem : MonoBehaviour
                         c.GetComponent<CharacterInfo>().haveAttacked = false;
                         c.GetComponent<CharacterInfo>().haveMoved = false;
                     }
-                    InitialiceIAInfo();
-                    InitialzeTeams();
-
+                    
                     AllyTurn = true;
                     EnemyTurn = false;
                     Debug.Log("Tu turno");
@@ -123,14 +126,17 @@ public class TurnSistem : MonoBehaviour
         IAInfo.CharacterInRange_plus_ability = new List<(CharacterInfo, Ability)>();
         IAInfo.posibleBestTilesForMovement = new List<OverlayTile>();
         IAInfo.amountOfInfluence = 0;
+        IAInfo.finalPath = new List<OverlayTile>();
+        IAInfo.indexPath = 0;
+        IAInfo.isMoving = false;
     } 
 
     public void SelectTroop()
     {
        
         IAInfo.selectedTroop = EnemyTeam.transform.GetChild(idTroop).GetComponent<CharacterInfo>();
-        //Debug.Log(IAInfo.selectedTroop.name);
         idTroop++;
+        tropaseleccionada = IAInfo.selectedTroop;
 
     }
 
@@ -222,6 +228,8 @@ public class TurnSistem : MonoBehaviour
         {
             tile.GetComponent<OverlayTile>().influence = 0;
         }
+
+
         foreach (Transform tile in Map.transform)
         {
            if(tile.GetComponent<OverlayTile>().characterInTile != null)
@@ -274,4 +282,6 @@ public class TurnSistem : MonoBehaviour
             IAInfo.amountOfInfluence += tile.GetComponent<OverlayTile>().influence;
         }
     }
+
+    
 }
