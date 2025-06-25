@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: 6b8171ca24ff461498dbb07e6862d215
+guid: 65e59e2fce114d14685e0c1b0034e9db
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2688807737759412073
-    second: MInion01_Portrait_0
+      213: 7198112981717626863
+    second: CeldaNormalMap_0
+  - first:
+      213: -1345923698285751010
+    second: CeldaNormalMap_1
+  - first:
+      213: -283316476719095119
+    second: CeldaNormalMap_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +43,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +81,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +106,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MInion01_Portrait_0
+      name: CeldaNormalMap_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 119
-        height: 132
+        width: 296
+        height: 160
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +121,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 96fa87e3460905520800000000000000
-      internalID: 2688807737759412073
+      spriteID: fef2860ae95d4e360800000000000000
+      internalID: 7198112981717626863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CeldaNormalMap_1
+      rect:
+        serializedVersion: 2
+        x: 296
+        y: 0
+        width: 296
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e15d5e40781525de0800000000000000
+      internalID: -1345923698285751010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CeldaNormalMap_2
+      rect:
+        serializedVersion: 2
+        x: 592
+        y: 0
+        width: 296
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b2a42e5a25711cf0800000000000000
+      internalID: -283316476719095119
       vertices: []
       indices: 
       edges: []
@@ -125,7 +175,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: a09984966abaac9428810d9a697747ea
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +185,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      MInion01_Portrait_0: 2688807737759412073
+      CeldaNormalMap_0: 7198112981717626863
+      CeldaNormalMap_1: -1345923698285751010
+      CeldaNormalMap_2: -283316476719095119
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

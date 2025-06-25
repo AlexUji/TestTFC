@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6b8171ca24ff461498dbb07e6862d215
+guid: a3a18e39fb25066439e88b9ee6065101
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2688807737759412073
-    second: MInion01_Portrait_0
+      213: -5443090953396966722
+    second: CeldaEmisionMap_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MInion01_Portrait_0
+      name: CeldaEmisionMap_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 119
-        height: 132
+        width: 296
+        height: 160
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 96fa87e3460905520800000000000000
-      internalID: 2688807737759412073
+      spriteID: ebaa1aadd914674b0800000000000000
+      internalID: -5443090953396966722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CeldaEmisionMap_1
+      rect:
+        serializedVersion: 2
+        x: 296
+        y: 0
+        width: 296
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38938c6ecd0e6ec4fa241c7aca200adb
+      internalID: -1643263748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CeldaEmisionMap_2
+      rect:
+        serializedVersion: 2
+        x: 592
+        y: 0
+        width: 296
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c22a83c984bfb6d4c9b156ea1cf476d2
+      internalID: -1237511463
       vertices: []
       indices: 
       edges: []
@@ -125,7 +169,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 00e65c7c49bffa2449933192500300b0
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +179,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      MInion01_Portrait_0: 2688807737759412073
+      CeldaEmisionMap_0: -5443090953396966722
+      CeldaEmisionMap_1: -1643263748
+      CeldaEmisionMap_2: -1237511463
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

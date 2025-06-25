@@ -391,7 +391,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -490,7 +490,7 @@ MonoBehaviour:
   SpawnPosition: {x: 0, y: -3, z: 0}
   activeTile: {fileID: 0}
   portrait: {fileID: 7625575254771426721, guid: a2f48330621149245a8dc32062d303ea, type: 3}
-  team: 0
+  team: 1
   type: 0
   haveMoved: 0
   haveAttacked: 0
