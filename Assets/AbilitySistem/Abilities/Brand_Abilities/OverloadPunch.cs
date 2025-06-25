@@ -27,10 +27,13 @@ public class OverloadPunch : Ability
         {
             
             targetCharacter.currentHP -= selfCharacter.attack*3 - math.abs((int)targetCharacter.defense / 2);
-            /*if(targetCharacter.currentHP <= 0) 
-                selfCharacter.EnemySlayed(targetCharacter);*/
+            if(targetCharacter.currentHP <= 0) 
+                selfCharacter.EnemySlayed(targetCharacter);
+            else
+                targetCharacter.transform.GetChild(2).gameObject.SetActive(true);
+
             base.ApplyEffect(selfCharacter, targetCharacter);
-            targetCharacter.transform.GetChild(2).gameObject.SetActive(true);
+            
             Debug.Log("Se ha ejecutado");
         }
         else

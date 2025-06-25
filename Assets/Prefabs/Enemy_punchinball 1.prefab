@@ -362,8 +362,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 1462312704225449950, guid: 79a439be74a36f541b6d91de98b1fd03, type: 3}
-  m_Color: {r: 1, g: 0.5893744, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: bc0239b8e1f72d54c902ef820ceb8626, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -439,7 +439,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpawnPosition: {x: 1, y: -3, z: 0}
   activeTile: {fileID: 0}
-  portrait: {fileID: 7625575254771426721, guid: a2f48330621149245a8dc32062d303ea, type: 3}
+  portrait: {fileID: 158866298441524514, guid: 8ed8c6b07042a934bbcbd3e2455107f2, type: 3}
   team: 2
   type: 0
   haveMoved: 0

@@ -98,7 +98,7 @@ public class TurnSistem : MonoBehaviour
                         c.GetComponent<CharacterInfo>().haveAttacked = false;
                         c.GetComponent<CharacterInfo>().haveMoved = false;
                     }
-                    
+                    InitialzeTeams();
                     AllyTurn = true;
                     EnemyTurn = false;
                     Debug.Log("Tu turno");

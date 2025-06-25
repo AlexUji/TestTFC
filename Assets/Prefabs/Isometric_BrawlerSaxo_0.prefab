@@ -516,7 +516,7 @@ MonoBehaviour:
   MaxMP: 10
   currentHP: 1
   currentMP: 5
-  movementRange: 50
+  movementRange: 3
   atackRange: 1
   attack: 5
   defense: 3
