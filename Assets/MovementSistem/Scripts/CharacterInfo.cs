@@ -41,17 +41,15 @@ public class CharacterInfo : MonoBehaviour
 
     public void basicAttack(CharacterInfo enemy)
     {
+        enemy.transform.GetChild(2).gameObject.SetActive(true);
         enemy.currentHP -= attack - enemy.defense;
-        if(enemy.currentHP <= 0)
-        {
-            //Animación muerte
-            EnemySlayed(enemy);
-        }
+        
         haveAttacked = true;
     }
 
     public void IAbasicAttack(CharacterInfo enemy)
     {
+        enemy.transform.GetChild(2).gameObject.SetActive(true);
         enemy.currentHP -= attack - enemy.defense;
         if (enemy.currentHP <= 0)
         {
@@ -66,7 +64,7 @@ public class CharacterInfo : MonoBehaviour
         //Debug.Log(enemy.gameObject.name + "Estaaaa moooortooo");
         
         
-        Destroy(enemy.gameObject);
+        //Destroy(enemy.gameObject);
         enemyCount++;
         if (enemyCount >= 3)
         {
@@ -84,7 +82,7 @@ public class CharacterInfo : MonoBehaviour
     public void IAEnemySlayed(CharacterInfo enemy)
     {
         //Debug.Log(enemy.gameObject.name + "Estaaaa moooortooo");
-        Destroy(enemy.gameObject);
+        //Destroy(enemy.gameObject);
         TurnSistem.Instance.UpdateInfluence();
 
     }
