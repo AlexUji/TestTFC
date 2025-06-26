@@ -122,7 +122,8 @@ public class MouseController : MonoBehaviour
                                 isFreeFocus = false;
                                 character = overlayTile.GetComponent<OverlayTile>().characterInTile;
                                 character.isFocused = true;
-                                character.menu.SetActive(true);
+                                //character.menu.SetActive(true);
+                                CanvasInstance.Instance.btnAcciones.SetActive(true);
                                 CanvasInstance.Instance.characterInfoBox.SetActive(true);
                                 CanvasInstance.Instance.characterInfoBox.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
                                 CanvasInstance.Instance.btnQuit.SetActive(true);
@@ -155,7 +156,8 @@ public class MouseController : MonoBehaviour
                             }
 
                             isMoving = true;
-                            character.menu.SetActive(false);
+                            //character.menu.SetActive(false);
+                            CanvasInstance.Instance.btnAcciones.SetActive(false);
 
 
                         }
@@ -181,9 +183,10 @@ public class MouseController : MonoBehaviour
 
         AbilityMenuInstance.Instance.gameObject.SetActive(false);
         CanvasInstance.Instance.btnQuit.SetActive(false);
+        CanvasInstance.Instance.btnAcciones.SetActive(false);
         isFreeFocus = true;
         character.isFocused = false;
-        character.menu.SetActive(false);
+        //character.menu.SetActive(false);
         CanvasInstance.Instance.characterInfoBox.SetActive(false);
         CanvasInstance.Instance.characterInfoBox.GetComponent<UICharacterInfoUpdate>().UpdateUI(character);
         isMoving = false;
@@ -257,7 +260,8 @@ public class MouseController : MonoBehaviour
                 isMoving = false;
 
                 moveAction = false;
-                character.menu.SetActive(true);
+                //character.menu.SetActive(true);
+                CanvasInstance.Instance.btnAcciones.SetActive(true);
             }
 
         }

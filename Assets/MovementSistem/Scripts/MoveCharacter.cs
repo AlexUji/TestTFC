@@ -13,41 +13,32 @@ public class MoveCharacter : MonoBehaviour
     private void Start()
     {
       
-        rangeFinder = new RangeFinder();
-        character = transform.GetComponentInParent<CharacterInfo>();
-        mouseController = GameObject.Find("Cursor").GetComponent<MouseController>();
+        
 
 
     }
 
     // Update is called once per frame
-    void Update()
+
+    public void PressBtn()
     {
+        rangeFinder = new RangeFinder();
+        
+        mouseController = GameObject.Find("Cursor").GetComponent<MouseController>();
+        character = mouseController.character;
+        Debug.Log(character.name);
 
-        if (Input.GetMouseButtonDown(0))
+        if (!character.haveMoved)
         {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-            if (hit.collider.name == "move")
-            //Has clicado en el icono
-            {
-               
-                if (!character.haveMoved)
-                {
-                    CanvasInstance.Instance.btnQuit.SetActive(true);
-                    GetInRangeTiles();
-                    mouseController.isFreeFocus = true;
-                    mouseController.moveAction = true;
+            CanvasInstance.Instance.btnQuit.SetActive(true);
+            GetInRangeTiles();
+            mouseController.isFreeFocus = true;
+            mouseController.moveAction = true;
 
-                }
-                else {
-                    Debug.Log("Ya te has movido");
-                }
-               
-              
-            }
-
-            ////
+        }
+        else
+        {
+            Debug.Log("Ya te has movido");
         }
     }
 

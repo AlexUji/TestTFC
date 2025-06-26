@@ -6,46 +6,27 @@ public class AttackAction : MonoBehaviour
 
     private CharacterInfo character;
     private MouseController mouseController;
-    private void Start()
-    {
 
+
+    public void PressBtn()
+    {
         rangeFinder = new RangeFinder();
-        character = transform.GetComponentInParent<CharacterInfo>();
+
         mouseController = GameObject.Find("Cursor").GetComponent<MouseController>();
+        character = mouseController.character;
 
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        if (Input.GetMouseButtonDown(0))
+        if (!character.haveAttacked)
         {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-            if (hit.collider.name == "attack")
-            //Has clicado en el icono
-            {
+            character.menu.SetActive(false);
+            CanvasInstance.Instance.btnQuit.SetActive(true);
+            GetInRangeTiles();
+            mouseController.isFreeFocus = true;
+            mouseController.attackAction = true;
 
-                if (!character.haveAttacked)
-                {
-                    character.menu.SetActive(false);
-                    CanvasInstance.Instance.btnQuit.SetActive(true);
-                    GetInRangeTiles();
-                    mouseController.isFreeFocus = true;
-                    mouseController.attackAction = true;
-
-                }
-                else
-                {
-                    Debug.Log("Ya has atacado");
-                }
-
-
-            }
-
-            ////
+        }
+        else
+        {
+            Debug.Log("Ya has atacado");
         }
     }
 

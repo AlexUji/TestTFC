@@ -13,25 +13,11 @@ public class QuitAction : MonoBehaviour
         mouseController = GameObject.Find("Cursor").GetComponent<MouseController>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PressBtn()
     {
-
-        if (Input.GetMouseButtonDown(0))
-        {
-           
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-
-            if (hit.collider.name == "quit")
-            {
-                mouseController.character.haveAttacked = true;
-                mouseController.character.haveMoved = true;
-                mouseController.ResetAction();
-
-            }
-        }
-
+        mouseController.character.haveAttacked = true;
+        mouseController.character.haveMoved = true;
+        mouseController.ResetAction();
     }
 
     public void QuitButton()
