@@ -1,7 +1,4 @@
-using NUnit.Framework;
 using System.Collections.Generic;
-using TMPro;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class TurnSistem : MonoBehaviour
@@ -131,6 +128,13 @@ public class TurnSistem : MonoBehaviour
         IAInfo.isMoving = false;
     } 
 
+    public void SelectTroopInDeath()
+    {
+        EnemyActionsPerTurn--;
+        idTroop++;
+        IAInfo.selectedTroop = EnemyTeam.transform.GetChild(idTroop).GetComponent<CharacterInfo>();
+        tropaseleccionada = IAInfo.selectedTroop;
+    }
     public void SelectTroop()
     {
        

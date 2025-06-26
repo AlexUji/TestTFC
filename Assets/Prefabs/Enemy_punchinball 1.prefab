@@ -173,8 +173,8 @@ MonoBehaviour:
   level: 1
   MaxHP: 350
   MaxMP: 10
-  currentHP: 1
-  currentMP: 5
+  currentHP: 100
+  currentMP: 10
   movementRange: 3
   atackRange: 1
   attack: 5

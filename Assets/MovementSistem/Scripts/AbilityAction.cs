@@ -16,7 +16,7 @@ public class AbilityAction : MonoBehaviour
         character = mouseController.character;
         if (!character.haveAttacked)
         {
-
+            CanvasInstance.Instance.btnAcciones.SetActive(false);
             //mouseController.isFreeFocus = true;
             //mouseController.attackAction = true;
             CanvasInstance.Instance.btnQuit.SetActive(true);

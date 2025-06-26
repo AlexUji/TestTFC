@@ -52,7 +52,7 @@ public class CharacterInfo : MonoBehaviour
         {
             enemy.transform.GetChild(2).gameObject.SetActive(true);
         }
-        
+        haveAttacked = true;
         
     }
 
@@ -64,6 +64,7 @@ public class CharacterInfo : MonoBehaviour
         {
             //Animación muerte
             IAEnemySlayed(enemy);
+            haveAttacked = true;
         }
         else
         {
@@ -75,8 +76,8 @@ public class CharacterInfo : MonoBehaviour
     public void EnemySlayed(CharacterInfo enemy)
     {
         //Debug.Log(enemy.gameObject.name + "Estaaaa moooortooo");
-        
-        
+
+        enemy.activeTile.isBlocked = false;
         Destroy(enemy.gameObject);
         enemyCount++;
         if (enemyCount >= 3)
@@ -87,14 +88,21 @@ public class CharacterInfo : MonoBehaviour
             Debug.Log("Has pasado de " + prelvl + "ha " + level);
             enemyCount = 0;
         }
-        TurnSistem.Instance.UpdateInfluence(); //Actualiza el mapa de influencia
+        //TurnSistem.Instance.InitialiceIAInfo();
         
+        TurnSistem.Instance.UpdateInfluence(); //Actualiza el mapa de influencia
+        if(TurnSistem.Instance.AllyActionsPerTurn == 1 && haveMoved == true)
+        {
+            TurnSistem.Instance.SelectTroopInDeath();
+        }
+        haveAttacked = true;
 
     }
 
     public void IAEnemySlayed(CharacterInfo enemy)
     {
         //Debug.Log(enemy.gameObject.name + "Estaaaa moooortooo");
+        enemy.activeTile.isBlocked = false;
         Destroy(enemy.gameObject);
         TurnSistem.Instance.UpdateInfluence();
 

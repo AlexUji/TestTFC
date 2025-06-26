@@ -1,18 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.Playables;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI.Table;
-using static UnityEngine.UI.Image;
+
 
 public struct IAInfo
 {
@@ -73,10 +62,22 @@ public class IAEnemy : MonoBehaviour
 
     void Think()
     {
-        if (turnSistem.EnemyTurn)
+        if(turnSistem.IAInfo.selectedTroop != null)
         {
-            n_root.Action();
+            if (turnSistem.EnemyTurn)
+            {
+                n_root.Action();
+            }
         }
+        else
+        {
+            turnSistem.InitialiceIAInfo();
+            turnSistem.InitialzeTeams();
+
+
+
+        }
+        
     }
 
 

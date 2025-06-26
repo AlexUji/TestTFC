@@ -28,6 +28,7 @@ public class SpawnSystem : MonoBehaviour
                     CharacterInfo newCharacter = character.GetComponent<CharacterInfo>();
                     newCharacter = Instantiate(character, TurnSistem.Instance.AllyTeam.transform).GetComponent<CharacterInfo>();
                     tile.Value.characterInTile = newCharacter;
+                    tile.Value.isBlocked = true;
                     tile.Value.influence = 1;
                     RangeFinder rangeFinder = new RangeFinder();
                     List<OverlayTile> neighboursTiles = MapManager.Instance.GetNeighboursNodes(tile.Value, rangeFinder.GetTilesInRange(tile.Value,1));
@@ -63,6 +64,7 @@ public class SpawnSystem : MonoBehaviour
                     CharacterInfo newCharacter = character.GetComponent<CharacterInfo>();
                     newCharacter = Instantiate(character, TurnSistem.Instance.EnemyTeam.transform).GetComponent<CharacterInfo>();
                     tile.Value.characterInTile = newCharacter;
+                    tile.Value.isBlocked = true;
                     tile.Value.influence = -1;
                     RangeFinder rangeFinder = new RangeFinder();
                     List<OverlayTile> neighboursTiles = MapManager.Instance.GetNeighboursNodes(tile.Value, rangeFinder.GetTilesInRange(tile.Value, 1));

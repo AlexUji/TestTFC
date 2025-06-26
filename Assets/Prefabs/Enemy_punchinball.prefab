@@ -224,7 +224,7 @@ MonoBehaviour:
   MaxHP: 350
   MaxMP: 10
   currentHP: 1
-  currentMP: 5
+  currentMP: 0
   movementRange: 3
   atackRange: 1
   attack: 5
