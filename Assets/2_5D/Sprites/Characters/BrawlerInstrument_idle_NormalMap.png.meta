@@ -1,82 +1,58 @@
 fileFormatVersion: 2
-guid: 6a71735462135d8469aeee4f00096be1
+guid: 12d2f375d91dbde4c88591c7292d277e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2797278474838531464
-    second: BrawlerInstrument_idle_0
+      213: -1962094325115816432
+    second: BrawlerInstrument_idle_NormalMap_0
   - first:
-      213: -3618728841781793271
-    second: BrawlerInstrument_idle_1
+      213: 1507140319938371561
+    second: BrawlerInstrument_idle_NormalMap_1
   - first:
-      213: 7079911661670658269
-    second: BrawlerInstrument_idle_2
+      213: -4059741148275056869
+    second: BrawlerInstrument_idle_NormalMap_2
   - first:
-      213: 2923259220475804578
-    second: BrawlerInstrument_idle_3
+      213: -7666083219752606968
+    second: BrawlerInstrument_idle_NormalMap_3
   - first:
-      213: -7298936185780419595
-    second: BrawlerInstrument_idle_4
+      213: -2945653864130730218
+    second: BrawlerInstrument_idle_NormalMap_4
   - first:
-      213: 4346648516029875962
-    second: BrawlerInstrument_idle_5
+      213: -6443807127448520022
+    second: BrawlerInstrument_idle_NormalMap_5
   - first:
-      213: 3219183517556978998
-    second: BrawlerInstrument_idle_6
+      213: 8452401028049845584
+    second: BrawlerInstrument_idle_NormalMap_6
   - first:
-      213: -2668611160150815387
-    second: BrawlerInstrument_idle_7
+      213: 8296379558136814135
+    second: BrawlerInstrument_idle_NormalMap_7
   - first:
-      213: 7544615602744123423
-    second: BrawlerInstrument_idle_8
+      213: 2669457418916049995
+    second: BrawlerInstrument_idle_NormalMap_8
   - first:
-      213: -2850538615845051826
-    second: BrawlerInstrument_idle_9
+      213: -1146822034767944489
+    second: BrawlerInstrument_idle_NormalMap_9
   - first:
-      213: -7748252541947729093
-    second: BrawlerInstrument_idle_10
+      213: 1992783899435643402
+    second: BrawlerInstrument_idle_NormalMap_10
   - first:
-      213: 331656587727531349
-    second: BrawlerInstrument_idle_11
+      213: -1033965976176841627
+    second: BrawlerInstrument_idle_NormalMap_11
   - first:
-      213: 4239620277038498207
-    second: BrawlerInstrument_idle_12
+      213: -5345157000110609013
+    second: BrawlerInstrument_idle_NormalMap_12
   - first:
-      213: -9125310094315314005
-    second: BrawlerInstrument_idle_13
+      213: -2140956220428469250
+    second: BrawlerInstrument_idle_NormalMap_13
   - first:
-      213: -513697954496674917
-    second: BrawlerInstrument_idle_14
+      213: 9216871539543930466
+    second: BrawlerInstrument_idle_NormalMap_14
   - first:
-      213: -3550643528251921731
-    second: BrawlerInstrument_idle_15
+      213: -7795996149957399786
+    second: BrawlerInstrument_idle_NormalMap_15
   - first:
-      213: -7053938154219659401
-    second: BrawlerInstrument_idle_16
-  - first:
-      213: 6069334578952432357
-    second: BrawlerInstrument_idle_17
-  - first:
-      213: 4433821167923349746
-    second: BrawlerInstrument_idle_18
-  - first:
-      213: -2055392059882018789
-    second: BrawlerInstrument_idle_19
-  - first:
-      213: 5887341019827667879
-    second: BrawlerInstrument_idle_20
-  - first:
-      213: 4990147556792022255
-    second: BrawlerInstrument_idle_21
-  - first:
-      213: 4470944757776609334
-    second: BrawlerInstrument_idle_22
-  - first:
-      213: 1676329788758021003
-    second: BrawlerInstrument_idle_23
-  - first:
-      213: 1186676561852383088
-    second: BrawlerInstrument_idle_24
+      213: -8134740280158228670
+    second: BrawlerInstrument_idle_NormalMap_16
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -123,7 +99,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 30
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -172,7 +148,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BrawlerInstrument_idle_0
+      name: BrawlerInstrument_idle_NormalMap_0
       rect:
         serializedVersion: 2
         x: 0
@@ -187,14 +163,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 87227693c021e29d0800000000000000
-      internalID: -2797278474838531464
+      spriteID: 01679af5b9d35c4e0800000000000000
+      internalID: -1962094325115816432
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrawlerInstrument_idle_1
+      name: BrawlerInstrument_idle_NormalMap_1
       rect:
         serializedVersion: 2
         x: 130
@@ -209,14 +185,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 90ea22f8a41b7cdc0800000000000000
-      internalID: -3618728841781793271
+      spriteID: 9ef5894c2207ae410800000000000000
+      internalID: 1507140319938371561
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrawlerInstrument_idle_2
+      name: BrawlerInstrument_idle_NormalMap_2
       rect:
         serializedVersion: 2
         x: 260
@@ -231,14 +207,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: dd076033526e04260800000000000000
-      internalID: 7079911661670658269
+      spriteID: b1f57016fe6e8a7c0800000000000000
+      internalID: -4059741148275056869
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrawlerInstrument_idle_3
+      name: BrawlerInstrument_idle_NormalMap_3
       rect:
         serializedVersion: 2
         x: 390
@@ -253,14 +229,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2ab78ded5c0819820800000000000000
-      internalID: 2923259220475804578
+      spriteID: 8032014ade99c9590800000000000000
+      internalID: -7666083219752606968
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrawlerInstrument_idle_4
+      name: BrawlerInstrument_idle_NormalMap_4
       rect:
         serializedVersion: 2
         x: 520
@@ -275,14 +251,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5f34050e538f4ba90800000000000000
-      internalID: -7298936185780419595
+      spriteID: 6172b35da6fee17d0800000000000000
+      internalID: -2945653864130730218
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrawlerInstrument_idle_5
+      name: BrawlerInstrument_idle_NormalMap_5
       rect:
         serializedVersion: 2
         x: 650
@@ -297,14 +273,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: af68079bbc5625c30800000000000000
-      internalID: 4346648516029875962
+      spriteID: aaafc4fee8ff296a0800000000000000
+      internalID: -6443807127448520022
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrawlerInstrument_idle_6
+      name: BrawlerInstrument_idle_NormalMap_6
       rect:
         serializedVersion: 2
         x: 780
@@ -319,14 +295,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 635b6ce6a56dcac20800000000000000
-      internalID: 3219183517556978998
+      spriteID: 05dbe08c3f5fc4570800000000000000
+      internalID: 8452401028049845584
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrawlerInstrument_idle_7
+      name: BrawlerInstrument_idle_NormalMap_7
       rect:
         serializedVersion: 2
         x: 910
@@ -341,96 +317,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 56d419be94037fad0800000000000000
-      internalID: -2668611160150815387
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BrawlerInstrument_idle_8
-      rect:
-        serializedVersion: 2
-        x: 1040
-        y: 0
-        width: 130
-        height: 132
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f10ee68eaebd3b860800000000000000
-      internalID: 7544615602744123423
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BrawlerInstrument_idle_9
-      rect:
-        serializedVersion: 2
-        x: 1170
-        y: 0
-        width: 130
-        height: 132
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e42a5005b3ad078d0800000000000000
-      internalID: -2850538615845051826
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BrawlerInstrument_idle_10
-      rect:
-        serializedVersion: 2
-        x: 1300
-        y: 0
-        width: 130
-        height: 132
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b3b20377d5da87490800000000000000
-      internalID: -7748252541947729093
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BrawlerInstrument_idle_11
-      rect:
-        serializedVersion: 2
-        x: 1430
-        y: 0
-        width: 130
-        height: 132
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 55deaeac8e74a9400800000000000000
-      internalID: 331656587727531349
+      spriteID: 73a9e848049a22370800000000000000
+      internalID: 8296379558136814135
       vertices: []
       indices: 
       edges: []
@@ -439,7 +327,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: dacf23dba34bbef44be3c98a8d64258d
+    spriteID: 36ed9174335ed544694aa6b980db0a70
     internalID: 0
     vertices: []
     indices: 
@@ -449,18 +337,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BrawlerInstrument_idle_0: -2797278474838531464
-      BrawlerInstrument_idle_1: -3618728841781793271
-      BrawlerInstrument_idle_10: -7748252541947729093
-      BrawlerInstrument_idle_11: 331656587727531349
-      BrawlerInstrument_idle_2: 7079911661670658269
-      BrawlerInstrument_idle_3: 2923259220475804578
-      BrawlerInstrument_idle_4: -7298936185780419595
-      BrawlerInstrument_idle_5: 4346648516029875962
-      BrawlerInstrument_idle_6: 3219183517556978998
-      BrawlerInstrument_idle_7: -2668611160150815387
-      BrawlerInstrument_idle_8: 7544615602744123423
-      BrawlerInstrument_idle_9: -2850538615845051826
+      BrawlerInstrument_idle_NormalMap_0: -1962094325115816432
+      BrawlerInstrument_idle_NormalMap_1: 1507140319938371561
+      BrawlerInstrument_idle_NormalMap_2: -4059741148275056869
+      BrawlerInstrument_idle_NormalMap_3: -7666083219752606968
+      BrawlerInstrument_idle_NormalMap_4: -2945653864130730218
+      BrawlerInstrument_idle_NormalMap_5: -6443807127448520022
+      BrawlerInstrument_idle_NormalMap_6: 8452401028049845584
+      BrawlerInstrument_idle_NormalMap_7: 8296379558136814135
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a15d2b3171afe3b4cade0012ff5083b4
+guid: c40dce7404b60bd40a8cfd07f67b3d03
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7708163184833533012
-    second: ranamosquete_v2_0
+      213: 3731962990018118769
+    second: CeldaBack1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ranamosquete_v2_0
+      name: CeldaBack1_0
       rect:
         serializedVersion: 2
-        x: 4
+        x: 228
         y: 0
-        width: 287
-        height: 321
+        width: 68
+        height: 120
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cabe0494c6a170590800000000000000
-      internalID: -7708163184833533012
+      spriteID: 1744fee01989ac330800000000000000
+      internalID: 3731962990018118769
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      CeldaBack1_0: 3731962990018118769
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
