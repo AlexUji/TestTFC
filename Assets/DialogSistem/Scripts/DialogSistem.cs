@@ -8,21 +8,24 @@ public class DialogSistem : MonoBehaviour
 {
     public NodoDialogo ndoActual;
     public float velocidadTexto;
+    public Animator animator;
 
     private string[] lineas;
     private float currentVelocidadTexto;
    
 
-    void Start()
-    {
-        StartCoroutine("WriteLine");
-    }
+
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
             currentVelocidadTexto = velocidadTexto * 0.2f;
 
+    }
+
+    public void StartDialog()
+    {
+        StartCoroutine("WriteLine");
     }
 
     IEnumerator WriteLine()
@@ -62,6 +65,8 @@ public class DialogSistem : MonoBehaviour
         }
         else if (Input.anyKeyDown)
         {
+            //SceneDirector.Instance.StopDirec();
+            SceneDirector.Instance.NextScene();
             transform.GetChild(3).gameObject.SetActive(false);
             gameObject.SetActive(false);
             StopCoroutine("WriteLine");

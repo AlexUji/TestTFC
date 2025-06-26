@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9007007574cd49544ae2143695c96e9c, type: 3}
-  m_Name: Prueba 2
+  m_Name: Escena_1_15
   m_EditorClassIdentifier: 
   lineas:
-  - Gracias por preguntar, nos vemos
-  nextDialog: {fileID: 11400000, guid: 13cca9e0fa7658a469872089652efcaa, type: 2}
-  portrait: {fileID: 7625575254771426721, guid: a2f48330621149245a8dc32062d303ea, type: 3}
+  - "\u2026"
+  - "Las 4 de la ma\xF1ana"
+  - "\xBFA qu\xE9 se debe esa pregunta?"
+  nextDialog: {fileID: 11400000, guid: eddc6bbb8c8475c47bb48bde7c951771, type: 2}
+  portrait: {fileID: -6196516595072713795, guid: c5c974ae53e61d147aac0339c6c071c7, type: 3}
   sonido1: {fileID: 0}
   sonido2: {fileID: 0}

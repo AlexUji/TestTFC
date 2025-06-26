@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9007007574cd49544ae2143695c96e9c, type: 3}
-  m_Name: TstSonido2
+  m_Name: Escena_1_02
   m_EditorClassIdentifier: 
   lineas:
-  - Probando el sonido
-  - Yo soy la ninia, que pasa
-  nextDialog: {fileID: 0}
-  portrait: {fileID: -6584099760926829483, guid: 9bcc3b5f5e2d41947a49d9c4a0d53e23, type: 3}
-  sonido1: {fileID: 8300000, guid: af98ca2cf82f5144ba3006c9b7c8deaf, type: 3}
-  sonido2: {fileID: 8300000, guid: fd2ac4858b2dadd4cabc073b53024018, type: 3}
+  - "\u2026 Pues son ratas despiadadas"
+  - 'Son todos iguales, pero no es mi trabajo cuestionarlos. '
+  nextDialog: {fileID: 11400000, guid: fe9112332c6db334e8ad6d7f3595b77d, type: 2}
+  portrait: {fileID: -6196516595072713795, guid: c5c974ae53e61d147aac0339c6c071c7, type: 3}
+  sonido1: {fileID: 0}
+  sonido2: {fileID: 0}

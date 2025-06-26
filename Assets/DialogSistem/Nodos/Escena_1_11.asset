@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9007007574cd49544ae2143695c96e9c, type: 3}
+  m_Name: Escena_1_11
+  m_EditorClassIdentifier: 
+  lineas:
+  - "Yo soy Angus, capit\xE1n de la guardia, y si no colaboras, este interrogatorio
+    dejar\xE1 de estar bajo mi mando."
+  - "Te aseguro que no quer\xE9is eso."
+  nextDialog: {fileID: 11400000, guid: 36ba5e62b3ba4ee49b508ee9b6b1d68d, type: 2}
+  portrait: {fileID: -6196516595072713795, guid: c5c974ae53e61d147aac0339c6c071c7, type: 3}
+  sonido1: {fileID: 0}
+  sonido2: {fileID: 0}

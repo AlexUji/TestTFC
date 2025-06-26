@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9007007574cd49544ae2143695c96e9c, type: 3}
-  m_Name: DialogoPrueba555
+  m_Name: Escena_1_10
   m_EditorClassIdentifier: 
   lineas:
-  - Hola que tal
-  nextDialog: {fileID: 0}
-  portrait: {fileID: 1245429152070876889, guid: 73eebd7387e895a48823869e3cb8e7b1, type: 3}
-  sonido1: {fileID: 8300000, guid: d4143628bdc66284d84728cddd75ec76, type: 3}
-  sonido2: {fileID: 8300000, guid: 2839e9837077d2f4085cb1b4a26ed8a8, type: 3}
+  - Brant
+  nextDialog: {fileID: 11400000, guid: f093e8c5fad252a42ada25e85de2046a, type: 2}
+  portrait: {fileID: 7625575254771426721, guid: a2f48330621149245a8dc32062d303ea, type: 3}
+  sonido1: {fileID: 0}
+  sonido2: {fileID: 0}
