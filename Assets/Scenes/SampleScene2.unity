@@ -232,6 +232,10 @@ PrefabInstance:
       propertyPath: ndoActual
       value: 
       objectReference: {fileID: 11400000, guid: d21a3ee3add54ca4c8f7f0e2e16bff5c, type: 2}
+    - target: {fileID: 7365585067564262472, guid: 094361031fe53d7488ff4be2c95c5a63, type: 3}
+      propertyPath: velocidadTexto
+      value: 0.01
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

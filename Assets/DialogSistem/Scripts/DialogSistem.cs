@@ -18,8 +18,8 @@ public class DialogSistem : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-            currentVelocidadTexto = velocidadTexto * 0.2f;
+       /* if (Input.GetKeyDown(KeyCode.Space))
+            currentVelocidadTexto = velocidadTexto * 0.2f;*/
 
     }
 
